@@ -12,9 +12,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     MainWindow(QWidget* parent = nullptr);
-    QWidget* createDashboardWidget();
-    QWidget* createTasksWidget();
-    QWidget* createSettingsWidget();
+   // QWidget* createDashboardWidget();
+  //  QWidget* createTasksWidget();
+  //  QWidget* createSettingsWidget();
 
     ~MainWindow()
     {
@@ -31,6 +31,7 @@ private:
     QWidget* mainContentWrapper;
     QStackedLayout* stackedLayout;
 
+    QWidget* topBarWidget;
     QWidget* dashboardWidget;
     QWidget* tasksWidget;
     QWidget* settingsWidget;

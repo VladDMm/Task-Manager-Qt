@@ -5,6 +5,7 @@
 #include "headers/My_Task_W.h"
 #include"headers/Settings_W.h"
 #include"headers/Dashboard_W.h"
+#include"headers/Top_Bar_W.h"
 
 
 #include <QHBoxLayout>
@@ -157,8 +158,7 @@ MainWindow::MainWindow(QWidget* parent)
     setWindowTitle("Task Manager");
     setWindowIcon(QIcon(":/rsc/web.png"));
 
-    // fundal general
-    central->setStyleSheet("background-color: #f8f5ee;"); // un bej deschis
+    central->setStyleSheet("background-color: #f8f5ee;");
 
     QHBoxLayout* mainLayout = new QHBoxLayout(central);
     mainLayout->setContentsMargins(20, 20, 20, 20);
@@ -168,13 +168,14 @@ MainWindow::MainWindow(QWidget* parent)
     sidePanel = new SidePanel(this);
     sidePanel->setFixedWidth(200);
 
-    // === Conținut principal ===
+    // === Main Content ===
     mainContentWrapper = new QWidget;
     mainContentWrapper->setStyleSheet("background: transparent;");
 
     stackedLayout = new QStackedLayout(mainContentWrapper);
 
-    // widget-uri functionale pentru meniu (ferestre interioare)
+    // widgets
+    topBarWidget = new Top_Bar_Widget(this);
     dashboardWidget = new Dashboard_Widget(this);
     tasksWidget = new My_Tasks_Widget(this);
     settingsWidget = new Settings_Widget(this);
@@ -183,9 +184,21 @@ MainWindow::MainWindow(QWidget* parent)
     stackedLayout->addWidget(tasksWidget);
     stackedLayout->addWidget(settingsWidget);
 
-    mainLayout->addWidget(sidePanel);
-    mainLayout->addWidget(mainContentWrapper, 1);
+    // === Container for right content ===
+    
+    QWidget* rightContainer = new QWidget;
+    QVBoxLayout* rightLayout = new QVBoxLayout(rightContainer);
+    rightLayout->setContentsMargins(0, 0, 0, 0);
+    rightLayout->setSpacing(15); // distance top bar and content
 
+    rightLayout->addWidget(topBarWidget);
+    rightLayout->addWidget(mainContentWrapper, 1);
+
+
+    mainLayout->addWidget(sidePanel);
+    mainLayout->addWidget(rightContainer, 1);
+
+    // === Connects ===
     connect(sidePanel, &SidePanel::dashboardClicked, this, &MainWindow::showDashboard);
     connect(sidePanel, &SidePanel::tasksClicked, this, &MainWindow::showTasks);
     connect(sidePanel, &SidePanel::settingsClicked, this, &MainWindow::showSettings);

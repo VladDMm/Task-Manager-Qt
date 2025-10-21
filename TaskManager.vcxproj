@@ -173,6 +173,7 @@
     <ClCompile Include="src\Settings_W.cpp" />
     <ClCompile Include="src\SidePanel.cpp" />
     <ClCompile Include="src\TaskManagerService.cpp" />
+    <ClCompile Include="src\Top_Bar_W.cpp" />
     <ClCompile Include="src\User.cpp" />
     <ClCompile Include="src\UserService.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -190,7 +191,7 @@
     <QtMoc Include="src\headers\Reg_Window.h" />
     <QtMoc Include="src\headers\Settings_W.h" />
     <ClInclude Include="src\headers\TaskManagerService.h" />
-    <ClInclude Include="src\headers\Top_Bar_W.h" />
+    <QtMoc Include="src\headers\Top_Bar_W.h" />
     <ClInclude Include="src\headers\User.h" />
     <ClInclude Include="src\headers\UserService.h" />
   </ItemGroup>

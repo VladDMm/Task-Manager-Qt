@@ -72,6 +72,9 @@
     <ClCompile Include="src\Dashboard_W.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Top_Bar_W.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\CentralDatabaseClass.h">
@@ -90,9 +93,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\UserService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\headers\Top_Bar_W.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -127,6 +127,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\headers\Dashboard_W.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\headers\Top_Bar_W.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
