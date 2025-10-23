@@ -3,9 +3,9 @@
 #include "headers/MySQLConnector.h"
 #include "headers/CentralDatabaseClass.h"
 #include "headers/My_Task_W.h"
-#include"headers/Settings_W.h"
-#include"headers/Dashboard_W.h"
-#include"headers/Top_Bar_W.h"
+#include "headers/Settings_W.h"
+#include "headers/Dashboard_W.h"
+#include "headers/Top_Bar_W.h"
 
 
 #include <QHBoxLayout>
@@ -22,126 +22,6 @@
 #include <QPushButton>
 #include <QCoreApplication>
 
-//MainWindow::MainWindow(QWidget* parent) :
-//	QMainWindow(parent)
-//{
-//    /*QPixmap newpix("new.png");
-//    QPixmap openpix("open.png");
-//    QPixmap quitpix("quit.png");
-//
-//    QAction* quit;
-//    QMenu* file;
-//
-//    file = menuBar()->addMenu("&File");
-//    quit = file->addAction(QIcon(quitpix), "Quit");
-//    
-//    quit->setShortcut(tr("CTRL+Q"));
-//    connect(quit, &QAction::triggered, qApp, &QCoreApplication::quit);
-//
-//    QToolBar* toolbar = addToolBar("main toolbar");
-//    toolbar->addAction(QIcon(newpix), "New File");
-//    toolbar->addAction(QIcon(openpix), "Open File");
-//    toolbar->addSeparator();
-//
-//    toolbar->addAction(quit);
-//    connect(quit, &QAction::triggered, qApp, &QCoreApplication::quit);   */
-//
-//    QWidget* centralWidget = new QWidget(this);
-//    QHBoxLayout* mainLayout = new QHBoxLayout;
-//
-//    sidePanel = new SidePanel;
-//    sidePanel->setFixedWidth(100); // lățime fixă pentru panelul lateral
-//
-//    mainContentArea = new QWidget;
-//    mainContentArea->setStyleSheet("background-color: white;");
-//    mainContentArea->setObjectName("mainContentArea");
-//
-//    // Poți seta layout aici dacă vrei să adaugi widgeturi dinamice ulterior
-//    QVBoxLayout* contentLayout = new QVBoxLayout;
-//    mainContentArea->setLayout(contentLayout);
-//
-//    mainLayout->addWidget(sidePanel);
-//    mainLayout->addWidget(mainContentArea, 1); // extinde pe restul spațiului
-//
-//    centralWidget->setLayout(mainLayout);
-//    setCentralWidget(centralWidget);
-//
-//  /*  QVBoxLayout* vbox = new QVBoxLayout(central);
-//    QHBoxLayout* hbox = new QHBoxLayout();
-//    QTextEdit* edit = new QTextEdit(central);
-//
-//    QPushButton *okBtn = new QPushButton("OK", central);
-//    QPushButton *applyBtn = new QPushButton("Apply", central);
-//
-//    hbox->addWidget(okBtn, 1, Qt::AlignRight);
-//    hbox->addWidget(applyBtn, 0);
-//    vbox->addWidget(edit);
-//    hbox->addStretch();
-//    vbox->addLayout(hbox);
-//
-//    statusBar()->showMessage("Ready");
-//    setCentralWidget(central);*/
-//}
-
-
-//MainWindow::MainWindow(QWidget* parent)
-//    : QMainWindow(parent)
-//{
-//    QWidget* centralWidget = new QWidget(this);
-//    QHBoxLayout* mainLayout = new QHBoxLayout;
-//
-//    // SidePanel
-//    sidePanel = new SidePanel;
-//    sidePanel->setFixedWidth(150);
-//
-//    // Main area cu fundal alb
-//    mainContentWrapper = new QWidget;
-//    mainContentWrapper->setStyleSheet("background-color: white;");
-//
-//    // Layout pentru a "pune peste" diverse widgeturi
-//    stackedLayout = new QStackedLayout;
-//
-//    // Exemplu de widgeturi
-//    dashboardWidget = new QLabel("Dashboard"); // poți înlocui cu o clasă proprie
-//    dashboardWidget->setStyleSheet("background-color: lightblue; font-size: 20px;");
-//
-//    tasksWidget = new QLabel("Tasks");
-//    tasksWidget->setStyleSheet("background-color: lightgreen; font-size: 20px;");
-//
-//    settingsWidget = new QLabel("Settings");
-//    settingsWidget->setStyleSheet("background-color: lightcoral; font-size: 20px;");
-//
-//    // Adăugăm widgeturile în stacked layout
-//    stackedLayout->addWidget(dashboardWidget);
-//    stackedLayout->addWidget(tasksWidget);
-//    stackedLayout->addWidget(settingsWidget);
-//
-//    mainContentWrapper->setLayout(stackedLayout);
-//
-//    // Final layout setup
-//    mainLayout->addWidget(sidePanel);
-//    mainLayout->addWidget(mainContentWrapper, 1);
-//
-//    centralWidget->setLayout(mainLayout);
-//    setCentralWidget(centralWidget);
-//
-//    
-//    connect(sidePanel, &SidePanel::dashboardClicked, this, &MainWindow::showDashboard);
-//    connect(sidePanel, &SidePanel::tasksClicked, this, &MainWindow::showTasks);
-//    connect(sidePanel, &SidePanel::settingsClicked, this, &MainWindow::showSettings);
-//}
-//
-//void MainWindow::showDashboard() {
-//    stackedLayout->setCurrentWidget(dashboardWidget);
-//}
-//
-//void MainWindow::showTasks() {
-//    stackedLayout->setCurrentWidget(tasksWidget);
-//}
-//
-//void MainWindow::showSettings() {
-//    stackedLayout->setCurrentWidget(settingsWidget);
-//}
 
 MySQLConnector my_sql;
 MySQLService msql_srv(my_sql.get_connection());
@@ -201,6 +81,9 @@ MainWindow::MainWindow(QWidget* parent)
     // === Connects ===
     connect(sidePanel, &SidePanel::dashboardClicked, this, &MainWindow::showDashboard);
     connect(sidePanel, &SidePanel::tasksClicked, this, &MainWindow::showTasks);
+    connect(sidePanel, &SidePanel::tasksClicked, topBarWidget, &Top_Bar_Widget::show_buttons_in_top_bar);
+    connect(sidePanel, &SidePanel::dashboardClicked, topBarWidget, &Top_Bar_Widget::clear_top_bar_buttons);
+    connect(sidePanel, &SidePanel::settingsClicked, topBarWidget, &Top_Bar_Widget::clear_top_bar_buttons);
     connect(sidePanel, &SidePanel::settingsClicked, this, &MainWindow::showSettings);
     
 }

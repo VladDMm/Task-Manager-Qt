@@ -12,8 +12,6 @@ ApplicationController::ApplicationController()
     authWindow = new Auth_Window;
     regWindow = new Reg_Window;
     
-
-    // === Legături între ferestre ===
     connect(authWindow, &Auth_Window::register_button_ath_win_clicked,
         this, &ApplicationController::showRegWindow);
 
@@ -21,8 +19,8 @@ ApplicationController::ApplicationController()
         this, &ApplicationController::authentificate);
 
     connect(regWindow, &Reg_Window::back_auth_button_reg_win_clicked, this, &ApplicationController::showAuthWindow);
-
-    // Afișăm inițial fereastra de login
+    
+    // show initial authentification window
     authWindow->show();
 }
 
