@@ -16,7 +16,6 @@ class Top_Bar_Widget : public QWidget
 private:
     QFrame* card;
     QToolButton* profileButton = nullptr;
-    //QToolButton* notifButton;
     QPushButton* newTask = nullptr;
     QHBoxLayout* cardLayout;
     QVBoxLayout* mainLayout;

@@ -35,18 +35,11 @@ Top_Bar_Widget::Top_Bar_Widget(QWidget* parent)
             background: transparent;
         }
     )");
-
+    card->setFixedHeight(50);
 
     cardLayout = new QHBoxLayout(card);
     cardLayout->setContentsMargins(20, 10, 20, 10);
     cardLayout->setSpacing(15);
-    
-    /*notifButton = new QToolButton;
-    notifButton->setIcon(QIcon(":/rsc/notification.png"));
-    notifButton->setText("🔔");
-    notifButton->setIconSize(QSize(24, 24));
-    notifButton->setToolTip("Notifications");
-    notifButton->setCursor(Qt::PointingHandCursor);*/
  
     profileButton = new QToolButton;
     profileButton->setIcon(QIcon(":/rsc/user.png"));
@@ -95,8 +88,6 @@ Top_Bar_Widget::Top_Bar_Widget(QWidget* parent)
     profileButton->setMenu(profileMenu);
 
     cardLayout->addStretch();
-    cardLayout->addSpacing(10);
-    //cardLayout->addWidget(notifButton);
     cardLayout->addWidget(profileButton);
 
     mainLayout = new QVBoxLayout(this);

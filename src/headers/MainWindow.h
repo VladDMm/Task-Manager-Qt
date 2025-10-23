@@ -27,10 +27,6 @@ private:
 public:
     MainWindow(QWidget* parent = nullptr);
 
-    ~MainWindow()
-    {
-        
-    }
 private slots:
     void showDashboard();
     void showTasks();
