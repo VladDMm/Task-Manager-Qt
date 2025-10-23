@@ -6,15 +6,26 @@
 class SidePanel;
 class QStackedLayout;
 class QWidget;
+class Top_Bar_Widget;
+class Dashboard_Widget;
+class My_Tasks_Widget;
+class Settings_Widget;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
+private:
+    SidePanel* sidePanel;
+    QWidget* mainContentWrapper;
+    QStackedLayout* stackedLayout;
+    Top_Bar_Widget* topBarWidget;
+    Dashboard_Widget* dashboardWidget;
+    My_Tasks_Widget* tasksWidget;
+    Settings_Widget* settingsWidget;
+
 public:
     MainWindow(QWidget* parent = nullptr);
-    QWidget* createDashboardWidget();
-    QWidget* createTasksWidget();
-    QWidget* createSettingsWidget();
 
     ~MainWindow()
     {
@@ -24,14 +35,4 @@ private slots:
     void showDashboard();
     void showTasks();
     void showSettings();
-
-private:
-
-    SidePanel* sidePanel;
-    QWidget* mainContentWrapper;
-    QStackedLayout* stackedLayout;
-
-    QWidget* dashboardWidget;
-    QWidget* tasksWidget;
-    QWidget* settingsWidget;
 };

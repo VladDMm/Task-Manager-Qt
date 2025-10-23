@@ -48,7 +48,7 @@ Dashboard_Widget::Dashboard_Widget(QWidget* parent) : QWidget(parent)
 
     grid->addWidget(makeCard("Calendar"), 0, 0);
     grid->addWidget(makeCard("My Tasks"), 0, 1);
-    grid->addWidget(makeCard("Comments"), 0, 2);
-    grid->addWidget(makeCard("Categories"), 1, 0);
-    grid->addWidget(makeCard("Tracking"), 1, 1);
+    grid->addWidget(makeCard("Comments"), 1, 0);
+    grid->addWidget(makeCard("Categories"), 1, 1);
+    //grid->addWidget(makeCard("Tracking"), 1, 1);
 }

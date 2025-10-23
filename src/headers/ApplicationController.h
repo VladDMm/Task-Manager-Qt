@@ -8,6 +8,12 @@
 class ApplicationController : public QObject
 {
     Q_OBJECT
+
+private:
+    Auth_Window* authWindow;
+    Reg_Window* regWindow;
+    MainWindow* mainWindow;
+
 public:
     ApplicationController();
 
@@ -17,8 +23,4 @@ private slots:
     void showMainWindow();
     void authentificate();
 
-private:
-    Auth_Window* authWindow;
-    Reg_Window* regWindow;
-    MainWindow* mainWindow;
 };

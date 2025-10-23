@@ -12,6 +12,7 @@ class Database
 {
 private:
 	IDatabaseService *db_service;
+
 public:
 	Database(IDatabaseService &service) : db_service(&service) {}
 
