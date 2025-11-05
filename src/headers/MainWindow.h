@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
-#include "Auth_Window.h"
+#include "AuthWindow.h"
 
 class SidePanel;
 class QStackedLayout;

@@ -5,34 +5,32 @@ User Database::get_user(std::string_view user, std::string_view pass)
 	return db_service->get_user(user, pass);
 }
 
-void Database::add_user(UserService &u)
+void Database::add_user(User &u)
 {
 	db_service->add_user(u);
 }
 
-void Database::change_username(UserService &u, std::string_view usern)
+void Database::change_username(std::string_view username)
 {
 }
 
-void Database::change_password(UserService &u, std::string_view pw)
+void Database::change_password(std::string_view password)
 {
 }
 
-void Database::add_task(std::unordered_map<int, Task> &tasks)
+uint16_t Database::add_task(const Task& task)
 {
-	if (tasks.empty())
-		return;
-	db_service->add_task(tasks);
+	return db_service->add_task(task);
 }
 
-void Database::add_category(TaskService & t)
+uint16_t Database::add_category(std::string_view category_title)
 {
-    
+    return db_service->add_category(category_title);
 }
 
-void Database::add_task_to_category(TaskService & t)
+void Database::add_task_to_category(uint16_t task_id, uint16_t category_id)
 {
-    
+    db_service->add_task_to_category(task_id, category_id);
 }
 
 void Database::change_category_for_task(TaskService & t)
@@ -43,6 +41,11 @@ void Database::change_category_for_task(TaskService & t)
 void Database::change_task(TaskService & t)
 {
    
+}
+
+std::unordered_map<uint16_t, Category> Database::get_categories()
+{
+    return db_service->get_categories();
 }
 
 void Database::delete_task(TaskService & t)

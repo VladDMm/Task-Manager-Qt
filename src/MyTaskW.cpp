@@ -1,4 +1,7 @@
-#include "headers/My_Task_W.h"
+#include "headers/MyTaskW.h"
+#include "headers/AddTaskW.h"
+#include "headers/AddCategoryW.h"
+
 
 #include <QFrame>
 #include <QVBoxLayout>
@@ -70,5 +73,21 @@ My_Tasks_Widget::My_Tasks_Widget(QWidget* parent) : QWidget(parent)
     grid->addWidget(card_categories_frame, 0, 0);
     grid->addWidget(card_comments_frame, 0, 1);
     grid->addWidget(card_tasks_frame,1,0,1,2);
+
+
+    connect(new_task_btn, &QPushButton::clicked, this, &My_Tasks_Widget::show_add_task_window);
+    connect(new_categorie_btn, &QPushButton::clicked, this, &My_Tasks_Widget::show_add_category_window);
    
+}
+
+void My_Tasks_Widget::show_add_task_window()
+{
+    AddTaskWindow* window = new AddTaskWindow;
+    window->show();
+}
+
+void My_Tasks_Widget::show_add_category_window()
+{
+    AddCategoryWindow* window = new AddCategoryWindow;
+    window->show();
 }

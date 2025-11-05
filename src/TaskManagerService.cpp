@@ -1,27 +1,39 @@
 #include "headers/TaskManagerService.h"
 #include "headers/CentralDatabaseClass.h"
 
-int TaskService::task_id_cache = 0;
-int TaskService::category_id_cache = 0;
-int TaskService::task_categories_id_cache = 0;
+#include <algorithm>
+#include <string>
 
-void TaskService::add_task(Task &t)
+//==============================================================================================
+
+uint16_t TaskService::add_task(std::shared_ptr<Task> task)
 {
-    t.task_id = ++task_id_cache;
-    tasks[task_id_cache] = t;
+	task->set_id(db.add_task(*task));
+	tasks[task->get_id()] = task;
+	return task->get_id();
 }
 
-void TaskService::add_category(std::string_view category_title)
+uint16_t TaskService::add_category(std::string_view category_title)
 {
-	
+	uint16_t categ_id = db.add_category(category_title);
+	categories[categ_id] = Category{ categ_id, category_title.data() };
+	return categ_id;
 }
 
-void TaskService::add_task_to_category(int task_id, int category_id)
+void TaskService::add_task_to_category(uint16_t task_id, uint16_t category_id)
 {
-	
+	// add to db
+	db.add_task_to_category(task_id, category_id);
+	// add local
+	auto it = tasks.find(task_id);
+	if (it != tasks.end())
+	{
+		it->second->task_category.first = task_id;
+		it->second->task_category.second = categories.find(category_id)->second;
+	}
 }
 
-void TaskService::change_category_for_task(int task_id, int category_id)
+void TaskService::change_category_for_task(uint16_t task_id, uint16_t category_id)
 {
 	
 }
@@ -31,92 +43,49 @@ void TaskService::change_task(Task &)
 	
 }
 
-void TaskService::change_categorie(int category_id, std::string_view category_title)
+void TaskService::change_categorie(uint16_t category_id, std::string_view category_title)
 {
 	
 }
 
-int TaskService::get_task_id()
+std::unordered_map<uint16_t, Category> TaskService::get_categories()
 {
-    return 0;
+	if(categories.empty())
+		return db.get_categories();
+
+	return categories;
 }
 
-int TaskService::get_user_id()
+std::shared_ptr<Task>TaskService::getTask(uint16_t id)
 {
-    return 0;
+	auto it = tasks.find(id);
+	return it != tasks.end() ? it->second : nullptr;
 }
 
-std::string_view TaskService::get_title()
+void TaskService::update_task_status(uint16_t id, const TaskStatus& new_status)
 {
-    return 0;
+	auto it = tasks.find(id);
+	if (it != tasks.end())
+	{
+		it->second->t_status = new_status;
+	}
 }
 
-std::string_view TaskService::get_description()
+void TaskService::delete_task(uint16_t id)
 {
-    return 0;
+	auto it = tasks.find(id);
+	if (it != tasks.end())
+	{
+		tasks.erase(id);
+	}
 }
 
-std::string TaskService::get_task_status()
-{
-	//switch (this->task_->t_status)
-	//{
-	//case 0:
-	//	return "todo";
-	//case 1:
-	//	return "in_progress";
-	//case 2:
-	//	return "done";
-	//default:
-	//	return "UNKNOW";
-	//}
-    return 0;
-}
-
-std::string TaskService::get_task_priority()
-{
-	//switch (this->task_->t_priority)
-	//{
-	//case 0:
-	//	return "low";
-	//case 1: 
-	//	return "medium";
-	//case 2:
-	//	return "high";
-	//default:
-	//	return "UNKNOW";
-	//}
-    return 0;
-}
-
-std::string_view TaskService::get_due_date()
-{
-	//return this->task_->due_date;
-    return 0;
-}
-
-std::string_view TaskService::get_created_at()
-{
-	//return this->task_->created_at;
-    return 0;
-}
-
-std::string_view TaskService::get_updated_at()
-{
-	//return this->task_->updated_at;
-    return 0;
-}
-
-void TaskService::delete_task(int task_id)
-{
-
-}
-
-void TaskService::delete_category(int category_id)
+void TaskService::delete_category(uint16_t category_id)
 {
 	
 }
 
-void TaskService::delete_task_from_category(int category_id)
+void TaskService::delete_task_from_category(uint16_t category_id)
 {
 	
 }

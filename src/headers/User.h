@@ -28,6 +28,18 @@ public:
 		return !(username.empty() && password_hash.empty());
 	}
 
+	uint16_t get_id() const {
+		return id;
+	}
+
+	std::string_view get_username() const { return username; };
+	std::string_view get_password()	const {
+		return password_hash;
+	};
+	void add_user();
+	void change_password(std::string_view pw);
+	void change_username(std::string_view usern);
+
 	~User()
 	{
 		//std::cout << "[~User] Destructor called\n";

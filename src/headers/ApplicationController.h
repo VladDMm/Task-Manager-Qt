@@ -1,8 +1,8 @@
 #pragma once
 #include <QObject>
 
-#include "Auth_Window.h"
-#include "Reg_Window.h"
+#include "AuthWindow.h"
+#include "RegWindow.h"
 #include "MainWindow.h"
 
 class ApplicationController : public QObject

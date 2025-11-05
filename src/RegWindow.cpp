@@ -1,5 +1,5 @@
-#include "headers/Reg_Window.h"
-#include "headers/UserService.h"
+#include "headers/RegWindow.h"
+#include "headers/User.h"
 
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -85,8 +85,9 @@ void Reg_Window::on_registerPushButton_reg_win_clicked()
 
     try
     {
-        user_srv = current_user = User(m_username.toStdString(), m_userpass.toStdString());
-        user_srv.add_user();
+        current_user = User(m_username.toStdString(), m_userpass.toStdString());
+        current_user.add_user();
+        QMessageBox::information(this, "Success", "Successfully.");
     }
     catch (const std::runtime_error& e)
     {

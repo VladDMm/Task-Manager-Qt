@@ -1,4 +1,4 @@
-#include "headers/Dashboard_W.h"
+#include "headers/DashboardW.h"
 
 #include <QFrame>
 #include <QLabel>

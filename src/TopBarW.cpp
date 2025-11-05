@@ -1,4 +1,4 @@
-﻿#include "headers/Top_Bar_W.h"
+﻿#include "headers/TopBarW.h"
 #include "headers/SidePanel.h"
 
 #include <QFrame>

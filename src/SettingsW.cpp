@@ -1,4 +1,4 @@
-#include "headers/Settings_W.h"
+#include "headers/SettingsW.h"
 
 #include <QFrame>
 #include <QLabel>

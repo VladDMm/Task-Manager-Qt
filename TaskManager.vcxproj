@@ -161,37 +161,46 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AddCategoryW.cpp" />
+    <ClCompile Include="src\AddTaskW.cpp" />
     <ClCompile Include="src\ApplicationController.cpp" />
-    <ClCompile Include="src\Auth_Window.cpp" />
+    <ClCompile Include="src\AuthWindow.cpp" />
     <ClCompile Include="src\CentralDatabaseClass.cpp" />
-    <ClCompile Include="src\Dashboard_W.cpp" />
+    <ClCompile Include="src\DashboardW.cpp" />
     <ClCompile Include="src\IMySQLService.cpp" />
     <ClCompile Include="src\MainWindow.cpp" />
     <ClCompile Include="src\MySQLConnector.cpp" />
-    <ClCompile Include="src\My_Task_W.cpp" />
-    <ClCompile Include="src\Reg_Window.cpp" />
-    <ClCompile Include="src\Settings_W.cpp" />
+    <ClCompile Include="src\MyTaskW.cpp" />
+    <ClCompile Include="src\RegWindow.cpp" />
+    <ClCompile Include="src\SettingsW.cpp" />
     <ClCompile Include="src\SidePanel.cpp" />
+    <ClCompile Include="src\Task.cpp" />
     <ClCompile Include="src\TaskManagerService.cpp" />
-    <ClCompile Include="src\Top_Bar_W.cpp" />
+    <ClCompile Include="src\TopBarW.cpp" />
     <ClCompile Include="src\User.cpp" />
     <ClCompile Include="src\UserService.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="src\headers\Auth_Window.h" />
+    <QtMoc Include="src\headers\AuthWindow.h" />
     <QtMoc Include="src\headers\ApplicationController.h" />
+    <QtMoc Include="src\headers\AddTaskW.h" />
+    <QtMoc Include="src\headers\AddCategoryW.h" />
     <ClInclude Include="src\headers\CentralDatabaseClass.h" />
-    <QtMoc Include="src\headers\Dashboard_W.h" />
+    <QtMoc Include="src\headers\DashboardW.h" />
+    <ClInclude Include="src\headers\Comment.h" />
+    <ClInclude Include="src\headers\EnumTypes.h" />
+    <ClInclude Include="src\headers\IdCacheService.h" />
     <ClInclude Include="src\headers\IMySQLService.h" />
     <QtMoc Include="src\headers\MainWindow.h" />
     <ClInclude Include="src\headers\MySQLConnector.h" />
     <QtMoc Include="src\headers\SidePanel.h" />
-    <QtMoc Include="src\headers\My_Task_W.h" />
-    <QtMoc Include="src\headers\Reg_Window.h" />
-    <QtMoc Include="src\headers\Settings_W.h" />
+    <QtMoc Include="src\headers\MyTaskW.h" />
+    <QtMoc Include="src\headers\RegWindow.h" />
+    <QtMoc Include="src\headers\SettingsW.h" />
+    <ClInclude Include="src\headers\Task.h" />
     <ClInclude Include="src\headers\TaskManagerService.h" />
-    <QtMoc Include="src\headers\Top_Bar_W.h" />
+    <QtMoc Include="src\headers\TopBarW.h" />
     <ClInclude Include="src\headers\User.h" />
     <ClInclude Include="src\headers\UserService.h" />
   </ItemGroup>

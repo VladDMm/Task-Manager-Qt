@@ -2,10 +2,11 @@
 #include "headers/SidePanel.h"
 #include "headers/MySQLConnector.h"
 #include "headers/CentralDatabaseClass.h"
-#include "headers/My_Task_W.h"
-#include "headers/Settings_W.h"
-#include "headers/Dashboard_W.h"
-#include "headers/Top_Bar_W.h"
+#include "headers/MyTaskW.h"
+#include "headers/SettingsW.h"
+#include "headers/DashboardW.h"
+#include "headers/TopBarW.h"
+
 
 
 #include <QHBoxLayout>
@@ -24,10 +25,11 @@
 
 
 MySQLConnector my_sql;
-MySQLService msql_srv(my_sql.get_connection());
-Database db(msql_srv);
+MySQLService msql_srv_(my_sql.get_connection());
+Database db(msql_srv_);
 
-auto& task_srv = TaskService::get_instance();
+TaskService taskService_;
+
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)

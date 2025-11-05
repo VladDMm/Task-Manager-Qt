@@ -4,7 +4,6 @@
 #include "headers/CentralDatabaseClass.h"
 
 User current_user;
-UserService user_srv;
 
 ApplicationController::ApplicationController()
 {

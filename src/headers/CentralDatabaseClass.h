@@ -6,7 +6,6 @@
 class IDatabaseService;
 class TaskService;
 class User;
-class UserService;
 
 class Database
 {
@@ -21,16 +20,16 @@ public:
 
 	// get-eri ; set-eri alte functii cu operatiuni pe baza de date care apeleaza ulterior functii din mysqlservice sau alt service
 	User get_user(std::string_view user, std::string_view pass);
-	void add_user(UserService &u);
-	void change_username(UserService &u, std::string_view usern);
-	void change_password(UserService &u, std::string_view pw);
+	void add_user(User &u);
+	void change_username(std::string_view username);
+	void change_password(std::string_view password);
 
-	void add_task(std::unordered_map<int, Task> &tasks);
-	void add_category(TaskService &t);
-	void add_task_to_category(TaskService &t);
+	uint16_t add_task(const Task& task);
+	uint16_t add_category(std::string_view category_title);
+	void add_task_to_category(uint16_t task_id, uint16_t category_id);
 	void change_category_for_task(TaskService &t);
 	void change_task(TaskService &t);
-
+	std::unordered_map<uint16_t, Category> get_categories();
 	void delete_task(TaskService &t);
 	void delete_category(TaskService &t);
 

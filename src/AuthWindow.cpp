@@ -1,4 +1,4 @@
-#include "headers/Auth_Window.h"
+#include "headers/AuthWindow.h"
 
 #include <QPushButton>
 #include <QVBoxLayout>
