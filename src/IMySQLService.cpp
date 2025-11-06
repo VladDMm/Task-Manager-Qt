@@ -160,22 +160,98 @@ void MySQLService::change_task(TaskService &)
 
 std::unordered_map<uint16_t, Category> MySQLService::get_categories()
 {
-	STMT stmt = STMT(con->createStatement());
+	PSTMT pstmt = PSTMT(this->con->prepareStatement(
+		"SELECT id, title FROM categories WHERE user_id = ?"
+	));
+	pstmt->setInt(1, current_user.get_id());
+	RES_SET res = RES_SET(pstmt->executeQuery());
 
-	RES_SET res = RES_SET(stmt->executeQuery("SELECT id, title FROM categories"));
-	std::unordered_map<uint16_t, Category> local_res;
-	
+	std::unordered_map<uint16_t, Category> local_result;	
 	while (res->next())
 	{
 		uint16_t id;
 		std::string title;
 		id = res->getUInt("id");
 		title = res->getString("title");
-		local_res.emplace(id, Category{ id, std::move(title) });
+		local_result.emplace(id, Category{ id, std::move(title) });
 	}
 
-	return local_res;
+	return local_result;
 }
+
+std::unordered_map<uint16_t, Comment> MySQLService::get_comments()
+{
+	PSTMT pstmt = PSTMT(this->con->prepareStatement(
+		"SELECT id, text FROM comments WHERE user_id = ?"
+	));
+	pstmt->setInt(1, current_user.get_id());
+	RES_SET res = RES_SET(pstmt->executeQuery());
+
+	std::unordered_map<uint16_t, Comment> local_result;
+	while (res->next())
+	{
+		uint16_t id;
+		std::string text;
+		id = res->getUInt("id");
+		text = res->getString("title");
+		local_result.emplace(id, Comment{ id, std::move(text) });
+	}
+
+	return local_result;
+}
+
+std::unordered_map<uint16_t, Task> MySQLService::get_tasks()
+{
+	PSTMT pstmt = PSTMT(this->con->prepareStatement(
+		"SELECT id, title, description, status, priority FROM tasks WHERE user_id = ?"
+	));
+	pstmt->setInt(1, current_user.get_id());
+	RES_SET res = RES_SET(pstmt->executeQuery());
+
+	std::unordered_map<uint16_t, Task> local_result;
+	
+	while (res->next())
+	{
+		uint16_t id;
+		std::string title;
+		std::string description;
+		std::string status;
+		std::string priority;
+
+		id = res->getUInt("id");
+		title = res->getString("title");
+		description = res->getString("description");
+		status = res->getString("status");
+		priority = res->getString("priority");
+
+		uint16_t u_status, u_priority;
+		switch (status[0])
+		{
+		case 'T': u_status = 0; break;
+		case 'I': u_status = 1; break;
+		case 'D': u_status = 2; break;
+		default:
+			u_status = 0;
+			break;
+		}
+
+		switch (priority[0])
+		{
+		case 'L': u_priority = 0; break;
+		case 'M': u_priority = 1; break;
+		case 'H': u_priority = 2; break;
+		default:
+			break;
+		}
+		
+		local_result.emplace(id, (Task{ id, title, description, 
+			static_cast<TaskStatus>(u_status), static_cast<TaskPriority>(u_priority) }));
+	}
+
+	return local_result;
+}
+
+
 
 void MySQLService::delete_task(TaskService &)
 {

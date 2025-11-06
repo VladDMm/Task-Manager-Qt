@@ -11,19 +11,22 @@
 #include <memory>
 
 class Task;
-class Category;
+struct Category;
+struct Comment;
 
 class TaskService
 {
 private:
-	std::unordered_map<uint16_t, std::shared_ptr<Task>> tasks;
+	std::unordered_map<uint16_t, Task> tasks;
 	std::unordered_map<uint16_t, Category> categories;
+	std::unordered_map<uint16_t, Comment> comments;
 public:
-	TaskService() {}
+	TaskService() { }
 
 	//====== Task Methods =======
+	void initializing_data();
 
-	uint16_t add_task(std::shared_ptr<Task> task);
+	uint16_t add_task(Task task);
 	uint16_t add_category(std::string_view category_title);
 	void add_task_to_category(uint16_t task_id, uint16_t category_id);
 
@@ -31,7 +34,9 @@ public:
 	void change_task(Task&);
 	void change_categorie(uint16_t category_id, std::string_view category_title);
 	std::unordered_map<uint16_t, Category> get_categories();
-	std::shared_ptr<Task> getTask(uint16_t id);
+	std::unordered_map<uint16_t, Comment> get_comments();
+	std::unordered_map<uint16_t, Task> get_tasks();
+	Task get_task(uint16_t id);
 
 	void update_task_status(uint16_t id, const TaskStatus& new_status);
 	// to do implement update task details

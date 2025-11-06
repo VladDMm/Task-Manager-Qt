@@ -10,6 +10,7 @@
 #include <QTextEdit>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QMessageBox>
 
 AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
 {
@@ -67,12 +68,14 @@ AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
     //============initialize categories==================
     categorie_item = new QComboBox;
     categorie_item->addItem("Select Categorie", QVariant(0));
+    
     auto categ_map_item = taskService_.get_categories();
 
     for (auto& [id, cat] : categ_map_item)
     {
         categorie_item->addItem(cat.title.c_str(), QVariant(id));
     }
+    
     //===================================================
     priority_lvl_item = new QComboBox;
     priority_lvl_item->addItem("Select Priority");
@@ -113,15 +116,16 @@ void AddTaskWindow::add_btn_pushed()
     QString title = this->title_line->text();
     QString desc = this->description_line->toPlainText();
     
-    
     if (!category_name.isEmpty())
     {
-        Task task{ 0, title.toStdString(), desc.toStdString(),static_cast<TaskPriority>(priority_id) };
-        uint16_t id_task = taskService_.add_task(std::make_shared<Task>(task));
+        Task task{ 0, title.toStdString(), desc.toStdString(), TaskStatus::TO_DO, static_cast<TaskPriority>(priority_id) };
+        uint16_t id_task = taskService_.add_task(std::move(task));
         taskService_.add_task_to_category(id_task, category_id);
+        QMessageBox::information(this, "Success", "Successfully.");
         return;
     }
 
-    Task task{ 0, title.toStdString(), desc.toStdString(), static_cast<TaskPriority>(priority_id) };
-    taskService_.add_task(std::make_shared<Task>(task));
+    Task task{ 0, title.toStdString(), desc.toStdString(), TaskStatus::TO_DO, static_cast<TaskPriority>(priority_id) };
+    taskService_.add_task(std::move(task));
+    QMessageBox::information(this, "Success", "Successfully.");
 }

@@ -56,9 +56,7 @@ void ApplicationController::authentificate()
         }
 
         current_user = db.get_user(username.toStdString(), password.toStdString());
-        
-        if(current_user)
-            showMainWindow();
+        showMainWindow();
     }
     catch (const std::exception& e)
     {
@@ -71,5 +69,6 @@ void ApplicationController::showMainWindow()
 {
     authWindow->close();
     regWindow->close();
+    taskService_.initializing_data();
     mainWindow->show();   
 }

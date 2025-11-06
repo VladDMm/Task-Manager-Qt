@@ -8,6 +8,7 @@
 #include <unordered_map>
 
 struct Category;
+struct Comment;
 
 class IDatabaseService
 {
@@ -24,6 +25,8 @@ public:
 	virtual void add_task_to_category(uint16_t, uint16_t)				= 0;
 	virtual void change_category_for_task(TaskService &)				= 0;
 	virtual std::unordered_map<uint16_t, Category> get_categories()		= 0;
+	virtual std::unordered_map<uint16_t, Comment> get_comments()		= 0;
+	virtual std::unordered_map<uint16_t, Task> get_tasks()				= 0;
 	virtual void change_task(TaskService &)								= 0;
 	virtual void delete_task(TaskService &)								= 0;
 	virtual void delete_category(TaskService &)							= 0;
@@ -52,6 +55,8 @@ public:
 	void change_category_for_task(TaskService &)				override;
 	void change_task(TaskService &)								override;
 	std::unordered_map<uint16_t, Category> get_categories()		override;
+	std::unordered_map<uint16_t, Comment> get_comments()		override;
+	std::unordered_map<uint16_t, Task> get_tasks()				override;
 	void delete_task(TaskService &)								override;
 	void delete_category(TaskService &)							override;
 

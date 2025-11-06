@@ -110,9 +110,6 @@
     <ClInclude Include="src\headers\Task.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\Comment.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\headers\IdCacheService.h">
       <Filter>Header Files</Filter>
     </ClInclude>

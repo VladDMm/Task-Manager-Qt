@@ -5,12 +5,31 @@
 #include <string>
 
 //==============================================================================================
-
-uint16_t TaskService::add_task(std::shared_ptr<Task> task)
+void TaskService::initializing_data()
 {
-	task->set_id(db.add_task(*task));
-	tasks[task->get_id()] = task;
-	return task->get_id();
+	auto cat_map = get_categories();
+	for (auto& [id, Category] : cat_map)
+	{
+		categories.emplace(id, std::move(Category));
+	}
+
+	auto comments_map = get_comments();
+	for (auto& [id, Comment] : comments_map)
+	{
+		comments.emplace(id, std::move(Comment));
+	}
+	auto task_map = get_tasks();
+	for (auto& [id, task] : task_map)
+	{
+		tasks.emplace(id, std::move(task));
+	}
+}
+
+uint16_t TaskService::add_task(Task task)
+{
+	task.set_id(db.add_task(task));
+	tasks[task.get_id()] = task;
+	return task.get_id();
 }
 
 uint16_t TaskService::add_category(std::string_view category_title)
@@ -28,8 +47,8 @@ void TaskService::add_task_to_category(uint16_t task_id, uint16_t category_id)
 	auto it = tasks.find(task_id);
 	if (it != tasks.end())
 	{
-		it->second->task_category.first = task_id;
-		it->second->task_category.second = categories.find(category_id)->second;
+		it->second.task_category.first = task_id;
+		it->second.task_category.second = categories.find(category_id)->second;
 	}
 }
 
@@ -56,10 +75,26 @@ std::unordered_map<uint16_t, Category> TaskService::get_categories()
 	return categories;
 }
 
-std::shared_ptr<Task>TaskService::getTask(uint16_t id)
+std::unordered_map<uint16_t, Comment> TaskService::get_comments()
+{
+	if(categories.empty())
+		return db.get_comments();
+
+	return comments;
+}
+
+std::unordered_map<uint16_t, Task> TaskService::get_tasks()
+{
+	if(tasks.empty())
+		return db.get_tasks();
+
+	return tasks;
+}
+
+Task TaskService::get_task(uint16_t id)
 {
 	auto it = tasks.find(id);
-	return it != tasks.end() ? it->second : nullptr;
+	return it != tasks.end() ? it->second : Task();
 }
 
 void TaskService::update_task_status(uint16_t id, const TaskStatus& new_status)
@@ -67,7 +102,7 @@ void TaskService::update_task_status(uint16_t id, const TaskStatus& new_status)
 	auto it = tasks.find(id);
 	if (it != tasks.end())
 	{
-		it->second->t_status = new_status;
+		it->second.t_status = new_status;
 	}
 }
 

@@ -48,6 +48,16 @@ std::unordered_map<uint16_t, Category> Database::get_categories()
     return db_service->get_categories();
 }
 
+std::unordered_map<uint16_t, Comment> Database::get_comments()
+{
+    return db_service->get_comments();
+}
+
+std::unordered_map<uint16_t, Task> Database::get_tasks()
+{
+    return db_service->get_tasks();
+}
+
 void Database::delete_task(TaskService & t)
 {
     

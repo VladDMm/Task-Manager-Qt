@@ -188,7 +188,6 @@
     <QtMoc Include="src\headers\AddCategoryW.h" />
     <ClInclude Include="src\headers\CentralDatabaseClass.h" />
     <QtMoc Include="src\headers\DashboardW.h" />
-    <ClInclude Include="src\headers\Comment.h" />
     <ClInclude Include="src\headers\EnumTypes.h" />
     <ClInclude Include="src\headers\IdCacheService.h" />
     <ClInclude Include="src\headers\IMySQLService.h" />

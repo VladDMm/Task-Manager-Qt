@@ -12,6 +12,6 @@ int main(int argc, char *argv[])
      QApplication::setStyle(QStyleFactory::create("WindowsVista"));
 
      ApplicationController window;
-
+     
     return app.exec();
 }

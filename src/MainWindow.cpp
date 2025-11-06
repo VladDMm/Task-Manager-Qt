@@ -76,7 +76,6 @@ MainWindow::MainWindow(QWidget* parent)
     rightLayout->addWidget(topBarWidget);
     rightLayout->addWidget(mainContentWrapper, 1);
 
-
     mainLayout->addWidget(sidePanel);
     mainLayout->addWidget(rightContainer, 1);
 

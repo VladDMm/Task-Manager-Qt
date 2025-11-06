@@ -1,12 +1,13 @@
 #include "headers/MyTaskW.h"
 #include "headers/AddTaskW.h"
 #include "headers/AddCategoryW.h"
-
+#include "headers/TaskManagerService.h"
 
 #include <QFrame>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QListWidget>
 
 My_Tasks_Widget::My_Tasks_Widget(QWidget* parent) : QWidget(parent)
 {
@@ -38,36 +39,74 @@ My_Tasks_Widget::My_Tasks_Widget(QWidget* parent) : QWidget(parent)
     grid->setSpacing(20);
     grid->setContentsMargins(0, 0, 0, 0);
 
-    card_categories_frame = new QFrame;
-    card_comments_frame = new QFrame;
-    card_tasks_frame = new QFrame;
-    
     //==== Categorie Frame =====   
-    hrz_card_categories_objects = new QHBoxLayout(card_categories_frame);
-    new_categorie_btn = new QPushButton("+ New Categorie");
-    new_categorie_btn->setCursor(Qt::PointingHandCursor);
+    card_categories_frame = new QFrame;
 
-    hrz_card_categories_objects->addWidget(new QLabel("Categories"), 0, Qt::AlignTop);
-    hrz_card_categories_objects->addStretch();
-    hrz_card_categories_objects->addWidget(new_categorie_btn, 0, Qt::AlignTop);
+    vbox_categories = new QVBoxLayout(card_categories_frame);
+    vbox_categories->setSpacing(10);
+    vbox_categories->setContentsMargins(15, 15, 15, 15);
+
+    QHBoxLayout* hbox_category_top = new QHBoxLayout;
+    new_categorie_btn = new QPushButton("+ New Category");
+    new_categorie_btn->setCursor(Qt::PointingHandCursor);
+    QLabel* lbl_categories = new QLabel("Categories");
+    lbl_categories->setStyleSheet("font-size: 16px; font-weight: bold;");
    
+    hbox_category_top->addWidget(lbl_categories);
+    hbox_category_top->addStretch();
+    hbox_category_top->addWidget(new_categorie_btn);
+    
+    category_list = new QListWidget;
+    vbox_categories->addLayout(hbox_category_top);
+    vbox_categories->addWidget(category_list);
+    
+    //==== Categorie Frame =====  
+    //
     //==== Comment Frame =====   
-    hrz_card_comments_objects = new QHBoxLayout(card_comments_frame);
+    card_comments_frame = new QFrame;
+
+    vbox_comments = new QVBoxLayout(card_comments_frame);
+    vbox_comments->setSpacing(10);
+    vbox_comments->setContentsMargins(15, 15, 15, 15);
+
+    QHBoxLayout* hbox_comments_top = new QHBoxLayout;
     new_comment_btn = new QPushButton("+ New Comment");
     new_comment_btn->setCursor(Qt::PointingHandCursor);
-
-    hrz_card_comments_objects->addWidget(new QLabel("Comments"), 0, Qt::AlignTop);
-    hrz_card_comments_objects->addStretch();
-    hrz_card_comments_objects->addWidget(new_comment_btn, 0, Qt::AlignTop);
+    QLabel* lbl_comments = new QLabel("Comments");
+    lbl_comments->setStyleSheet("font-size: 16px; font-weight: bold;");
+   
+    hbox_comments_top->addWidget(lbl_comments);
+    hbox_comments_top->addStretch();
+    hbox_comments_top->addWidget(new_comment_btn);
     
+    comment_list = new QListWidget;
+    vbox_comments->addLayout(hbox_comments_top);
+    vbox_comments->addWidget(comment_list);
+    
+    //==== Comment Frame ===== 
+    // 
     //==== Task Frame =====
-    hrz_card_tasks_objects = new QHBoxLayout(card_tasks_frame);
+    card_tasks_frame = new QFrame;
+
+    vbox_tasks = new QVBoxLayout(card_tasks_frame);
+    vbox_tasks->setSpacing(10);
+    vbox_tasks->setContentsMargins(15, 15, 15, 15);
+    //
+    QHBoxLayout* hbox_tasks_top = new QHBoxLayout;
     new_task_btn = new QPushButton("+ New Task");
     new_task_btn->setCursor(Qt::PointingHandCursor);
-
-    hrz_card_tasks_objects->addWidget(new QLabel("Tasks"), 0, Qt::AlignTop);
-    hrz_card_tasks_objects->addStretch();
-    hrz_card_tasks_objects->addWidget(new_task_btn, 0, Qt::AlignTop);
+    QLabel* lbl_tasks = new QLabel("Tasks");
+    lbl_tasks->setStyleSheet("font-size: 16px; font-weight: bold;");
+    
+    hbox_tasks_top->addWidget(lbl_tasks);
+    hbox_tasks_top->addStretch();
+    hbox_tasks_top->addWidget(new_task_btn);
+    //
+    task_list = new QListWidget;
+    vbox_tasks->addLayout(hbox_tasks_top);
+    vbox_tasks->addWidget(task_list);
+    
+    //====== Task Frame =====
 
     //==== Add frames to grid layout =====
     grid->addWidget(card_categories_frame, 0, 0);
@@ -84,10 +123,40 @@ void My_Tasks_Widget::show_add_task_window()
 {
     AddTaskWindow* window = new AddTaskWindow;
     window->show();
+    refresh_task_list();
 }
 
 void My_Tasks_Widget::show_add_category_window()
 {
     AddCategoryWindow* window = new AddCategoryWindow;
     window->show();
+    refresh_category_list();
+}
+
+void My_Tasks_Widget::refresh_task_list()
+{
+    auto tasks = taskService_.get_tasks();
+    task_list->clear();
+    for (auto& [id, task] : tasks)
+    {
+        QListWidgetItem* task_item = new QListWidgetItem;
+        task_item->setText(task.get_description().data());
+        task_item->setData(Qt::UserRole, id);
+        task_list->addItem(task_item);
+    }
+    card_tasks_frame->update();
+}
+
+void My_Tasks_Widget::refresh_category_list()
+{
+    auto categories = taskService_.get_categories();
+    category_list->clear();
+    for (auto& [id, category] : categories)
+    {
+        QListWidgetItem* categ_item = new QListWidgetItem;
+        categ_item->setText(category.title.c_str());
+        categ_item->setData(Qt::UserRole, id);
+        category_list->addItem(categ_item);
+    }
+    card_categories_frame->update();
 }
