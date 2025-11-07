@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QCloseEvent>
 #include <QMessageBox>
 
 AddCategoryWindow::AddCategoryWindow(QWidget* parent) : QWidget(parent)
@@ -70,7 +71,9 @@ AddCategoryWindow::AddCategoryWindow(QWidget* parent) : QWidget(parent)
     layout->addWidget(edit_frame);
 
     connect(confirm_btn, &QPushButton::clicked, this, &AddCategoryWindow::add_btn_pushed);
-    connect(cancel_btn, &QPushButton::clicked, this, &AddCategoryWindow::close);
+    connect(cancel_btn, &QPushButton::clicked, this, [this]() {
+        this->close();
+        });
 }
 
 void AddCategoryWindow::add_btn_pushed()
@@ -85,4 +88,10 @@ void AddCategoryWindow::add_btn_pushed()
         
     taskService_.add_category(title.toStdString());
     QMessageBox::information(this, "Success", "Successfully.");
+}
+
+void AddCategoryWindow::closeEvent(QCloseEvent* event)
+{
+    emit windowClosed();
+    QWidget::closeEvent(event);
 }

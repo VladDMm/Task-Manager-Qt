@@ -178,7 +178,6 @@
     <ClCompile Include="src\TaskManagerService.cpp" />
     <ClCompile Include="src\TopBarW.cpp" />
     <ClCompile Include="src\User.cpp" />
-    <ClCompile Include="src\UserService.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -201,7 +200,6 @@
     <ClInclude Include="src\headers\TaskManagerService.h" />
     <QtMoc Include="src\headers\TopBarW.h" />
     <ClInclude Include="src\headers\User.h" />
-    <ClInclude Include="src\headers\UserService.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">

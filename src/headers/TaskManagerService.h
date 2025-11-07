@@ -17,9 +17,9 @@ struct Comment;
 class TaskService
 {
 private:
-	std::unordered_map<uint16_t, Task> tasks;
-	std::unordered_map<uint16_t, Category> categories;
-	std::unordered_map<uint16_t, Comment> comments;
+	std::unordered_map<uint16_t, Task>		tasks;
+	std::unordered_map<uint16_t, Category>	categories;
+	std::unordered_map<uint16_t, Comment>	comments;
 public:
 	TaskService() { }
 

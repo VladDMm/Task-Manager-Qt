@@ -4,7 +4,7 @@
 class QPushButton;
 class QLineEdit;
 
-class Reg_Window : public QWidget
+class RegWindow : public QWidget
 {
     Q_OBJECT
 
@@ -18,7 +18,7 @@ private:
     QPushButton* back_auth;
 
 public:
-    Reg_Window(QWidget* parent = nullptr);
+    RegWindow(QWidget* parent = nullptr);
 
     QString getName() { return m_username; };
     QString getPass() { return m_userpass; };

@@ -21,8 +21,8 @@ struct PairHash {
 
 class IdCacheService {
 private:
-	std::unordered_map<EntityType, std::atomic<int32_t>> local_temp_ids;
-	std::unordered_map<std::pair<int32_t, EntityType>, int32_t, PairHash> id_mapping; // local_id, EntityType -> real_id
+	std::unordered_map<EntityType, std::atomic<int32_t>>					local_temp_ids;
+	std::unordered_map<std::pair<int32_t, EntityType>, int32_t, PairHash>   id_mapping; // local_id, EntityType -> real_id
 	mutable std::mutex mtx;
 
 public:

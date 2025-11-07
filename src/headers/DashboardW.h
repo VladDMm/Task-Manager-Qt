@@ -4,7 +4,7 @@
 
 class QFrame;
 
-class Dashboard_Widget : public QWidget
+class DashboardWidget : public QWidget
 {
     Q_OBJECT
 
@@ -12,7 +12,7 @@ private:
     QFrame* card;
 
 public:
-    Dashboard_Widget(QWidget* parent = nullptr);
+    DashboardWidget(QWidget* parent = nullptr);
 
 
 };

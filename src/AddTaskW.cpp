@@ -1,4 +1,4 @@
-#include "headers/AddTaskW.h"
+﻿#include "headers/AddTaskW.h"
 #include "headers/Task.h"
 #include "headers/TaskManagerService.h"
 
@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QMessageBox>
+#include <QCloseEvent>
 
 AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
 {
@@ -68,14 +69,7 @@ AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
     //============initialize categories==================
     categorie_item = new QComboBox;
     categorie_item->addItem("Select Categorie", QVariant(0));
-    
-    auto categ_map_item = taskService_.get_categories();
-
-    for (auto& [id, cat] : categ_map_item)
-    {
-        categorie_item->addItem(cat.title.c_str(), QVariant(id));
-    }
-    
+        
     //===================================================
     priority_lvl_item = new QComboBox;
     priority_lvl_item->addItem("Select Priority");
@@ -96,7 +90,9 @@ AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
     layout->addWidget(edit_frame);
 
     connect(confirm_btn, &QPushButton::clicked, this, &AddTaskWindow::add_btn_pushed);
-    connect(cancel_btn, &QPushButton::clicked, this, &AddTaskWindow::close);
+    connect(cancel_btn, &QPushButton::clicked, this, [this]() {
+        this->close();
+        });
 
     connect(categorie_item, &QComboBox::currentIndexChanged, this, [&](uint16_t index) 
         {
@@ -128,4 +124,25 @@ void AddTaskWindow::add_btn_pushed()
     Task task{ 0, title.toStdString(), desc.toStdString(), TaskStatus::TO_DO, static_cast<TaskPriority>(priority_id) };
     taskService_.add_task(std::move(task));
     QMessageBox::information(this, "Success", "Successfully.");
+}
+
+void AddTaskWindow::initialize_components()
+{
+    auto categ_map_item = taskService_.get_categories();
+    
+    if (categorie_item->count() < categ_map_item.size())
+    {
+        categorie_item->clear();
+        categorie_item->addItem("Select Categorie", QVariant(0));
+        for (auto& [id, cat] : categ_map_item)
+        {
+            categorie_item->addItem(cat.title.c_str(), QVariant(id));
+        }
+    }
+}
+
+void AddTaskWindow::closeEvent(QCloseEvent* event)
+{
+    emit windowClosed();
+    QWidget::closeEvent(event);
 }

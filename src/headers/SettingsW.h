@@ -4,7 +4,7 @@
 
 class QFrame;
 
-class Settings_Widget : public QWidget
+class SettingsWidget : public QWidget
 {
     Q_OBJECT
 
@@ -12,6 +12,6 @@ private:
     QFrame* card;
 
 public:
-    Settings_Widget(QWidget* parent = nullptr);
+    SettingsWidget(QWidget* parent = nullptr);
 
 };

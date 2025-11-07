@@ -10,7 +10,7 @@ class User
 	friend class UserService;
 	
 private:
-	int id;
+	int			id;
 	std::string username;
 	std::string password_hash;
 

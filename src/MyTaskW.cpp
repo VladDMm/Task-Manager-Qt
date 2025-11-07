@@ -9,7 +9,7 @@
 #include <QPushButton>
 #include <QListWidget>
 
-My_Tasks_Widget::My_Tasks_Widget(QWidget* parent) : QWidget(parent)
+MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 {
     setStyleSheet(R"(
             QFrame {
@@ -105,7 +105,6 @@ My_Tasks_Widget::My_Tasks_Widget(QWidget* parent) : QWidget(parent)
     task_list = new QListWidget;
     vbox_tasks->addLayout(hbox_tasks_top);
     vbox_tasks->addWidget(task_list);
-    
     //====== Task Frame =====
 
     //==== Add frames to grid layout =====
@@ -113,50 +112,56 @@ My_Tasks_Widget::My_Tasks_Widget(QWidget* parent) : QWidget(parent)
     grid->addWidget(card_comments_frame, 0, 1);
     grid->addWidget(card_tasks_frame,1,0,1,2);
 
+    task_window = new AddTaskWindow;
+    category_window = new AddCategoryWindow;
 
-    connect(new_task_btn, &QPushButton::clicked, this, &My_Tasks_Widget::show_add_task_window);
-    connect(new_categorie_btn, &QPushButton::clicked, this, &My_Tasks_Widget::show_add_category_window);
-   
+    connect(new_task_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_task_window);
+    connect(new_categorie_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_category_window);
+    connect(task_window, &AddTaskWindow::windowClosed, this, &MyTasksWidget::refresh_task_list);
+    connect(category_window, &AddCategoryWindow::windowClosed, this, &MyTasksWidget::refresh_category_list);
+    connect(new_task_btn, &QPushButton::clicked, task_window, &AddTaskWindow::initialize_components);
 }
 
-void My_Tasks_Widget::show_add_task_window()
+void MyTasksWidget::show_add_task_window()
 {
-    AddTaskWindow* window = new AddTaskWindow;
-    window->show();
-    refresh_task_list();
+    task_window->show();
 }
 
-void My_Tasks_Widget::show_add_category_window()
+void MyTasksWidget::show_add_category_window()
 {
-    AddCategoryWindow* window = new AddCategoryWindow;
-    window->show();
-    refresh_category_list();
+    category_window->show();
 }
 
-void My_Tasks_Widget::refresh_task_list()
+void MyTasksWidget::refresh_task_list()
 {
     auto tasks = taskService_.get_tasks();
-    task_list->clear();
-    for (auto& [id, task] : tasks)
+    if (task_list->count() < tasks.size())
     {
-        QListWidgetItem* task_item = new QListWidgetItem;
-        task_item->setText(task.get_description().data());
-        task_item->setData(Qt::UserRole, id);
-        task_list->addItem(task_item);
+        task_list->clear();
+        for (auto& [id, task] : tasks)
+        {
+            QListWidgetItem* task_item = new QListWidgetItem;
+            task_item->setText(task.get_description().data());
+            task_item->setData(Qt::UserRole, id);
+            task_list->addItem(task_item);
+        }
+        card_tasks_frame->update();
     }
-    card_tasks_frame->update();
 }
 
-void My_Tasks_Widget::refresh_category_list()
+void MyTasksWidget::refresh_category_list()
 {
     auto categories = taskService_.get_categories();
-    category_list->clear();
-    for (auto& [id, category] : categories)
+    if (category_list->count() < categories.size())
     {
-        QListWidgetItem* categ_item = new QListWidgetItem;
-        categ_item->setText(category.title.c_str());
-        categ_item->setData(Qt::UserRole, id);
-        category_list->addItem(categ_item);
+        category_list->clear();
+        for (auto& [id, category] : categories)
+        {
+            QListWidgetItem* categ_item = new QListWidgetItem;
+            categ_item->setText(category.title.c_str());
+            categ_item->setData(Qt::UserRole, id);
+            category_list->addItem(categ_item);
+        }
+        card_categories_frame->update();
     }
-    card_categories_frame->update();
 }

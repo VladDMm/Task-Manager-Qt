@@ -15,7 +15,7 @@
 #include <QPixmap>
 #include <QApplication>
 
-Top_Bar_Widget::Top_Bar_Widget(QWidget* parent)
+TopBarWidget::TopBarWidget(QWidget* parent)
     : QWidget(parent)
 {
     card = new QFrame(this);
@@ -104,7 +104,7 @@ Top_Bar_Widget::Top_Bar_Widget(QWidget* parent)
     connect(actLogout, &QAction::triggered, qApp, QApplication::quit);
 }
 
-void Top_Bar_Widget::show_buttons_in_top_bar()
+void TopBarWidget::show_buttons_in_top_bar()
 {
     if (newTask)
         return;
@@ -132,7 +132,7 @@ void Top_Bar_Widget::show_buttons_in_top_bar()
 
 }
 
-void Top_Bar_Widget::clear_top_bar_buttons()
+void TopBarWidget::clear_top_bar_buttons()
 {
     if (newTask) {
         cardLayout->removeWidget(newTask);

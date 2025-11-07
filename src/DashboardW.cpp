@@ -4,7 +4,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
-Dashboard_Widget::Dashboard_Widget(QWidget* parent) : QWidget(parent)
+DashboardWidget::DashboardWidget(QWidget* parent) : QWidget(parent)
 {
     card = new QFrame(this);
     card->setStyleSheet(R"(

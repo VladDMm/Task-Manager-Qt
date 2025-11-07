@@ -5,20 +5,20 @@
 class QPushButton;
 class QLineEdit;
 
-class Auth_Window : public QWidget
+class AuthWindow : public QWidget
 {
 	Q_OBJECT
 
 private:
     QString      m_username;
     QString      m_userpass;
-    QLineEdit* usern_line_edit;
-    QLineEdit* passw_line_edit;
+    QLineEdit*   usern_line_edit;
+    QLineEdit*   passw_line_edit;
     QPushButton* login_btn;
     QPushButton* register_btn;
 
 public:
-    Auth_Window(QWidget* parent = nullptr);
+    AuthWindow(QWidget* parent = nullptr);
 
     QString getLogin() { return m_username; };
     QString getPass() { return m_userpass; };

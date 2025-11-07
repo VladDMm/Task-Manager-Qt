@@ -18,7 +18,6 @@ private:
     QString         priority_name;
     uint16_t        category_id;
     QString         category_name;
-    
 
     QFrame*         edit_frame;
     QLineEdit*      title_line;
@@ -30,6 +29,13 @@ private:
 
 private slots:
     void add_btn_pushed();
+    void closeEvent(QCloseEvent* event);
+
+public slots:
+    void initialize_components();
+
+signals:
+    void windowClosed();
 
 public:
     AddTaskWindow(QWidget* parent = nullptr);

@@ -8,7 +8,6 @@
 #include "headers/TopBarW.h"
 
 
-
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QStackedLayout>
@@ -57,10 +56,10 @@ MainWindow::MainWindow(QWidget* parent)
     stackedLayout = new QStackedLayout(mainContentWrapper);
 
     // widgets
-    topBarWidget = new Top_Bar_Widget(this);
-    dashboardWidget = new Dashboard_Widget(this);
-    tasksWidget = new My_Tasks_Widget(this);
-    settingsWidget = new Settings_Widget(this);
+    topBarWidget = new TopBarWidget(this);
+    dashboardWidget = new DashboardWidget(this);
+    tasksWidget = new MyTasksWidget(this);
+    settingsWidget = new SettingsWidget(this);
 
     stackedLayout->addWidget(dashboardWidget);
     stackedLayout->addWidget(tasksWidget);
@@ -82,11 +81,12 @@ MainWindow::MainWindow(QWidget* parent)
     // === Connects ===
     connect(sidePanel, &SidePanel::dashboardClicked, this, &MainWindow::showDashboard);
     connect(sidePanel, &SidePanel::tasksClicked, this, &MainWindow::showTasks);
-    connect(sidePanel, &SidePanel::tasksClicked, topBarWidget, &Top_Bar_Widget::show_buttons_in_top_bar);
-    connect(sidePanel, &SidePanel::dashboardClicked, topBarWidget, &Top_Bar_Widget::clear_top_bar_buttons);
-    connect(sidePanel, &SidePanel::settingsClicked, topBarWidget, &Top_Bar_Widget::clear_top_bar_buttons);
+    connect(sidePanel, &SidePanel::tasksClicked, topBarWidget, &TopBarWidget::show_buttons_in_top_bar);
+    connect(sidePanel, &SidePanel::dashboardClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
+    connect(sidePanel, &SidePanel::settingsClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
     connect(sidePanel, &SidePanel::settingsClicked, this, &MainWindow::showSettings);
-    
+    connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_task_list);
+    connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_category_list);
 }
 
 
@@ -100,6 +100,10 @@ void MainWindow::showTasks() {
 
 void MainWindow::showSettings() {
     stackedLayout->setCurrentWidget(settingsWidget);
+}
+
+void MainWindow::refreshTasks() {
+    tasksWidget->refresh_task_list();
 }
 
 //

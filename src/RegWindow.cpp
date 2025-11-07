@@ -6,7 +6,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 
-Reg_Window::Reg_Window(QWidget* parent) : QWidget(parent)
+RegWindow::RegWindow(QWidget* parent) : QWidget(parent)
 {
     setStyleSheet(R"(
         QWidget {
@@ -56,23 +56,23 @@ Reg_Window::Reg_Window(QWidget* parent) : QWidget(parent)
     layout->addWidget(register_btn);
     layout->addWidget(back_auth);
 
-    connect(register_btn, &QPushButton::clicked, this, &Reg_Window::on_registerPushButton_reg_win_clicked);
-    connect(back_auth, &QPushButton::clicked, this, &Reg_Window::back_auth_button_reg_win_clicked);
-    connect(usern_line_edit, &QLineEdit::textEdited, this, &Reg_Window::on_lineEdit_username_Edited);
-    connect(passw_line_edit, &QLineEdit::textEdited, this, &Reg_Window::on_lineEdit_password_Edited);
+    connect(register_btn, &QPushButton::clicked, this, &RegWindow::on_registerPushButton_reg_win_clicked);
+    connect(back_auth, &QPushButton::clicked, this, &RegWindow::back_auth_button_reg_win_clicked);
+    connect(usern_line_edit, &QLineEdit::textEdited, this, &RegWindow::on_lineEdit_username_Edited);
+    connect(passw_line_edit, &QLineEdit::textEdited, this, &RegWindow::on_lineEdit_password_Edited);
 }
 
-void Reg_Window::on_lineEdit_username_Edited()
+void RegWindow::on_lineEdit_username_Edited()
 {
     m_username = usern_line_edit->text();
 }
 
-void Reg_Window::on_lineEdit_password_Edited()
+void RegWindow::on_lineEdit_password_Edited()
 {
     m_userpass = usern_line_edit->text();
 }
 
-void Reg_Window::on_registerPushButton_reg_win_clicked()
+void RegWindow::on_registerPushButton_reg_win_clicked()
 {
     m_username = usern_line_edit->text();
     m_userpass = usern_line_edit->text();

@@ -9,19 +9,19 @@ class QPushButton;
 class QHBoxLayout;
 class QVBoxLayout;
 
-class Top_Bar_Widget : public QWidget
+class TopBarWidget : public QWidget
 {
     Q_OBJECT
 
 private:
-    QFrame* card;
+    QFrame*      card;
     QToolButton* profileButton = nullptr;
     QPushButton* newTask = nullptr;
     QHBoxLayout* cardLayout;
     QVBoxLayout* mainLayout;
 
 public:
-    explicit Top_Bar_Widget(QWidget* parent = nullptr);
+    explicit TopBarWidget(QWidget* parent = nullptr);
 
 public slots:
     void show_buttons_in_top_bar();

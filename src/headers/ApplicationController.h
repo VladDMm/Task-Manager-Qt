@@ -10,8 +10,8 @@ class ApplicationController : public QObject
     Q_OBJECT
 
 private:
-    Auth_Window* authWindow;
-    Reg_Window* regWindow;
+    AuthWindow* authWindow;
+    RegWindow*  regWindow;
     MainWindow* mainWindow;
 
 public:
