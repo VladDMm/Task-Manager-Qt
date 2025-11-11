@@ -24,6 +24,6 @@ public:
     explicit TopBarWidget(QWidget* parent = nullptr);
 
 public slots:
-    void show_buttons_in_top_bar();
-    void clear_top_bar_buttons();
+    //void show_buttons_in_top_bar();
+    //void clear_top_bar_buttons();
 };

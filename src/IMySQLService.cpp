@@ -7,7 +7,7 @@ using RES_SET = std::unique_ptr<sql::ResultSet>;
 
 User MySQLService::get_user(std::string_view user, std::string_view pass)
 {
-	if (sodium_init() < 0) 
+	if (sodium_init() < 0)
 	{
 		throw std::runtime_error("sodium_init failed\n");
 	}
@@ -18,7 +18,7 @@ User MySQLService::get_user(std::string_view user, std::string_view pass)
 	pstmt->setString(1, user.data());
 	RES_SET res = RES_SET(pstmt->executeQuery());
 
-	if (!res->next()) 
+	if (!res->next())
 	{
 		throw std::runtime_error("Invalid username or password!");
 	}
@@ -39,7 +39,7 @@ User MySQLService::get_user(std::string_view user, std::string_view pass)
 	return User(id, username, stored_hash);
 }
 
-void MySQLService::add_user(User &user)
+void MySQLService::add_user(User& user)
 {
 	if (sodium_init() < 0)
 	{
@@ -62,7 +62,7 @@ void MySQLService::add_user(User &user)
 		opslimit,
 		memlimit) != 0)
 		throw std::runtime_error("Crypto_pwhash_str failed");
-	
+
 	if (this->con == nullptr)
 	{
 		throw std::runtime_error("Con = nullptr!");
@@ -93,15 +93,15 @@ void MySQLService::change_password(std::string_view pw)
 uint16_t MySQLService::add_task(const Task& task)
 {
 	PSTMT pstmt = PSTMT(this->con->prepareStatement(
-	"INSERT INTO tasks(user_id, title, description, status, priority) VALUES (?, ?, ?, ?, ?)"
+		"INSERT INTO tasks(user_id, title, description, status, priority) VALUES (?, ?, ?, ?, ?)"
 	));
-	
+
 	pstmt->setInt(1, current_user.get_id());
 	pstmt->setString(2, sql::SQLString(task.get_title().data()));
 	pstmt->setString(3, sql::SQLString(task.get_description().data()));
 	pstmt->setString(4, sql::SQLString(task.get_task_status().data()));
 	pstmt->setString(5, sql::SQLString(task.get_task_priority().data()));
-	
+
 	if (pstmt->executeUpdate())
 	{
 		// return real id for task
@@ -148,14 +148,14 @@ void MySQLService::add_task_to_category(uint16_t task_id, uint16_t category_id)
 	pstmt->executeUpdate();
 }
 
-void MySQLService::change_category_for_task(TaskService &)
+void MySQLService::change_category_for_task(TaskService&)
 {
- 
+
 }
 
-void MySQLService::change_task(TaskService &)
+void MySQLService::change_task(TaskService&)
 {
-   
+
 }
 
 std::unordered_map<uint16_t, Category> MySQLService::get_categories()
@@ -166,7 +166,7 @@ std::unordered_map<uint16_t, Category> MySQLService::get_categories()
 	pstmt->setInt(1, current_user.get_id());
 	RES_SET res = RES_SET(pstmt->executeQuery());
 
-	std::unordered_map<uint16_t, Category> local_result;	
+	std::unordered_map<uint16_t, Category> local_result;
 	while (res->next())
 	{
 		uint16_t id;
@@ -209,7 +209,7 @@ std::unordered_map<uint16_t, Task> MySQLService::get_tasks()
 	RES_SET res = RES_SET(pstmt->executeQuery());
 
 	std::unordered_map<uint16_t, Task> local_result;
-	
+
 	while (res->next())
 	{
 		uint16_t id;
@@ -243,8 +243,8 @@ std::unordered_map<uint16_t, Task> MySQLService::get_tasks()
 		default:
 			break;
 		}
-		
-		local_result.emplace(id, (Task{ id, title, description, 
+
+		local_result.emplace(id, (Task{ id, title, description,
 			static_cast<TaskStatus>(u_status), static_cast<TaskPriority>(u_priority) }));
 	}
 
@@ -252,15 +252,28 @@ std::unordered_map<uint16_t, Task> MySQLService::get_tasks()
 }
 
 
-
-void MySQLService::delete_task(TaskService &)
+int16_t MySQLService::delete_task(uint16_t& task_id)
 {
-   
+	PSTMT pstmt = PSTMT(this->con->prepareStatement(
+		"DELETE FROM tasks WHERE id = ? AND user_id = ?"
+	));
+
+	pstmt->setInt(1, task_id);
+	pstmt->setInt(2, current_user.get_id());
+	
+	return pstmt->executeUpdate();
 }
 
-void MySQLService::delete_category(TaskService &)
+int16_t MySQLService::delete_category(uint16_t& category_id)
 {
-  
+	PSTMT pstmt = PSTMT(this->con->prepareStatement(
+		"DELETE FROM categories WHERE id = ? AND user_id = ?"
+	));
+
+	pstmt->setInt(1, category_id);
+	pstmt->setInt(2, current_user.get_id());
+
+	return pstmt->executeUpdate();
 }
 
 

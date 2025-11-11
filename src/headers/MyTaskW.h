@@ -43,6 +43,8 @@ public slots:
     void show_add_category_window();
     void refresh_task_list();
     void refresh_category_list();
+private slots:
+    void showContextMenu(const QPoint& pos);
 
 public:
     MyTasksWidget(QWidget* parent = nullptr);

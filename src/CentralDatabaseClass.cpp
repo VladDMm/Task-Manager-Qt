@@ -58,12 +58,12 @@ std::unordered_map<uint16_t, Task> Database::get_tasks()
     return db_service->get_tasks();
 }
 
-void Database::delete_task(TaskService & t)
+int16_t Database::delete_task(uint16_t& id)
 {
-    
+    return db_service->delete_task(id);
 }
 
-void Database::delete_category(TaskService & t)
+int16_t Database::delete_category(uint16_t& id)
 {
-    
+    return 0;
 }

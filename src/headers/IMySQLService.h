@@ -28,8 +28,8 @@ public:
 	virtual std::unordered_map<uint16_t, Comment> get_comments()		= 0;
 	virtual std::unordered_map<uint16_t, Task> get_tasks()				= 0;
 	virtual void change_task(TaskService &)								= 0;
-	virtual void delete_task(TaskService &)								= 0;
-	virtual void delete_category(TaskService &)							= 0;
+	virtual int16_t delete_task(uint16_t &)								= 0;
+	virtual int16_t delete_category(uint16_t &)							= 0;
 
 	virtual ~IDatabaseService()											= default;
 };
@@ -57,8 +57,8 @@ public:
 	std::unordered_map<uint16_t, Category> get_categories()		override;
 	std::unordered_map<uint16_t, Comment> get_comments()		override;
 	std::unordered_map<uint16_t, Task> get_tasks()				override;
-	void delete_task(TaskService &)								override;
-	void delete_category(TaskService &)							override;
+	int16_t delete_task(uint16_t&)								override;
+	int16_t delete_category(uint16_t&)							override;
 
 	~MySQLService() = default;
 };	

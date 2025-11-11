@@ -111,6 +111,7 @@ void TaskService::delete_task(uint16_t id)
 	auto it = tasks.find(id);
 	if (it != tasks.end())
 	{
+		db.delete_task(id);
 		tasks.erase(id);
 	}
 }

@@ -104,39 +104,39 @@ TopBarWidget::TopBarWidget(QWidget* parent)
     connect(actLogout, &QAction::triggered, qApp, QApplication::quit);
 }
 
-void TopBarWidget::show_buttons_in_top_bar()
-{
-    if (newTask)
-        return;
+//void TopBarWidget::show_buttons_in_top_bar()
+//{
+//    if (newTask)
+//        return;
+//
+//    newTask = new QPushButton("+ New Task");
+//    newTask->setCursor(Qt::PointingHandCursor);
+//    newTask->setStyleSheet(R"(
+//    QPushButton {
+//        background-color: #4a90e2;
+//        color: white;
+//        border-radius: 10px;
+//        padding: 6px 14px;
+//        font-weight: bold;
+//    }
+//    QPushButton:hover {
+//        background-color: #3c7cd4;
+//    }
+//)");
+//
+//    int index = cardLayout->indexOf(profileButton);
+//    cardLayout->insertWidget(index, newTask);
+//
+//    cardLayout->update();
+//    update();
+//
+//}
 
-    newTask = new QPushButton("+ New Task");
-    newTask->setCursor(Qt::PointingHandCursor);
-    newTask->setStyleSheet(R"(
-    QPushButton {
-        background-color: #4a90e2;
-        color: white;
-        border-radius: 10px;
-        padding: 6px 14px;
-        font-weight: bold;
-    }
-    QPushButton:hover {
-        background-color: #3c7cd4;
-    }
-)");
-
-    int index = cardLayout->indexOf(profileButton);
-    cardLayout->insertWidget(index, newTask);
-
-    cardLayout->update();
-    update();
-
-}
-
-void TopBarWidget::clear_top_bar_buttons()
-{
-    if (newTask) {
-        cardLayout->removeWidget(newTask);
-        delete newTask;
-        newTask = nullptr;
-    }
-}
+//void TopBarWidget::clear_top_bar_buttons()
+//{
+//    if (newTask) {
+//        cardLayout->removeWidget(newTask);
+//        delete newTask;
+//        newTask = nullptr;
+//    }
+//}

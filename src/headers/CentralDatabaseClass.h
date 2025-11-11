@@ -32,8 +32,8 @@ public:
 	std::unordered_map<uint16_t, Category> get_categories();
 	std::unordered_map<uint16_t, Comment> get_comments();
 	std::unordered_map<uint16_t, Task> get_tasks();
-	void delete_task(TaskService &t);
-	void delete_category(TaskService &t);
+	int16_t delete_task(uint16_t& id);
+	int16_t delete_category(uint16_t& id);
 
 	~Database() {
 		//std::cout << "[~Database] Destructor called\n";

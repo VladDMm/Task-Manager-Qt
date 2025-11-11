@@ -81,9 +81,9 @@ MainWindow::MainWindow(QWidget* parent)
     // === Connects ===
     connect(sidePanel, &SidePanel::dashboardClicked, this, &MainWindow::showDashboard);
     connect(sidePanel, &SidePanel::tasksClicked, this, &MainWindow::showTasks);
-    connect(sidePanel, &SidePanel::tasksClicked, topBarWidget, &TopBarWidget::show_buttons_in_top_bar);
-    connect(sidePanel, &SidePanel::dashboardClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
-    connect(sidePanel, &SidePanel::settingsClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
+    //connect(sidePanel, &SidePanel::tasksClicked, topBarWidget, &TopBarWidget::show_buttons_in_top_bar);
+    //connect(sidePanel, &SidePanel::dashboardClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
+    //connect(sidePanel, &SidePanel::settingsClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
     connect(sidePanel, &SidePanel::settingsClicked, this, &MainWindow::showSettings);
     connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_task_list);
     connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_category_list);
