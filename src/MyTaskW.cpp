@@ -2,6 +2,7 @@
 #include "headers/AddTaskW.h"
 #include "headers/AddCategoryW.h"
 #include "headers/TaskManagerService.h"
+#include "headers/EditTaskW.h"
 #include "mysql/jdbc.h"
 
 
@@ -14,6 +15,7 @@
 #include <QPushButton>
 #include <QListWidget>
 #include <QGraphicsDropShadowEffect>
+
 
 MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 {
@@ -121,11 +123,13 @@ MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 	grid->addWidget(card_tasks_frame, 1, 0, 1, 2);
 
 	task_window = new AddTaskWindow;
+	edit_task_window = new EditTaskWindow;
 	category_window = new AddCategoryWindow;
 
 	connect(task_list, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 	connect(new_task_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_task_window);
 	connect(new_categorie_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_category_window);
+	connect(task_list, &QListWidget::itemDoubleClicked, this, &MyTasksWidget::show_edit_task_window);
 	connect(task_window, &AddTaskWindow::windowClosed, this, &MyTasksWidget::refresh_task_list);
 	connect(category_window, &AddCategoryWindow::windowClosed, this, &MyTasksWidget::refresh_category_list);
 	connect(new_task_btn, &QPushButton::clicked, task_window, &AddTaskWindow::initialize_components);
@@ -134,6 +138,10 @@ MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 void MyTasksWidget::show_add_task_window()
 {
 	task_window->show();
+}
+void MyTasksWidget::show_edit_task_window()
+{
+	edit_task_window->show();
 }
 
 void MyTasksWidget::show_add_category_window()
@@ -222,6 +230,10 @@ void MyTasksWidget::showContextMenu(const QPoint& pos) {
 		{
 			taskService_.delete_task(item->data(Qt::UserRole).toInt());
 			delete task_list->takeItem(task_list->row(item));
+		});
+	connect(editAction, &QAction::triggered, [this, item]()
+		{
+			edit_task_window->show();
 		});
 
 	// Map the local position to global screen coordinates

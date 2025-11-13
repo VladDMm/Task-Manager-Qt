@@ -167,6 +167,7 @@
     <ClCompile Include="src\AuthWindow.cpp" />
     <ClCompile Include="src\CentralDatabaseClass.cpp" />
     <ClCompile Include="src\DashboardW.cpp" />
+    <ClCompile Include="src\EditTaskW.cpp" />
     <ClCompile Include="src\IMySQLService.cpp" />
     <ClCompile Include="src\MainWindow.cpp" />
     <ClCompile Include="src\MySQLConnector.cpp" />
@@ -187,6 +188,7 @@
     <QtMoc Include="src\headers\AddCategoryW.h" />
     <ClInclude Include="src\headers\CentralDatabaseClass.h" />
     <QtMoc Include="src\headers\DashboardW.h" />
+    <QtMoc Include="src\headers\EditTaskW.h" />
     <ClInclude Include="src\headers\EnumTypes.h" />
     <ClInclude Include="src\headers\IdCacheService.h" />
     <ClInclude Include="src\headers\IMySQLService.h" />

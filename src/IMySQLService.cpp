@@ -148,14 +148,22 @@ void MySQLService::add_task_to_category(uint16_t task_id, uint16_t category_id)
 	pstmt->executeUpdate();
 }
 
-void MySQLService::change_category_for_task(TaskService&)
+void MySQLService::update_category_for_task(TaskService&)
 {
 
 }
 
-void MySQLService::change_task(TaskService&)
+int16_t MySQLService::update_task(Task& task)
 {
+	PSTMT pstmt = PSTMT(this->con->prepareStatement("UPDATE tasks SET title=?, description=?, status=?, priority=? WHERE id = ? AND user_id = ?"));
+	pstmt->setString(1, task.get_title().data());
+	pstmt->setString(2, task.get_description().data());
+	pstmt->setString(3, task.get_task_priority().data());
+	pstmt->setString(4, task.get_task_priority());
+	pstmt->setInt(5, task.get_id());
+	pstmt->setInt(6, current_user.get_id());
 
+	return pstmt->executeUpdate();
 }
 
 std::unordered_map<uint16_t, Category> MySQLService::get_categories()

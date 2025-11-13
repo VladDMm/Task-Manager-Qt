@@ -75,6 +75,15 @@ std::unordered_map<uint16_t, Category> TaskService::get_categories()
 	return categories;
 }
 
+std::pair<uint16_t, Category> TaskService::get_category_by_id(uint16_t& id)
+{
+	auto it = categories.find(id);
+	if (it != categories.end())
+		return std::make_pair(it->first, std::move(it->second));
+
+	throw ("Id not exist");
+}
+
 std::unordered_map<uint16_t, Comment> TaskService::get_comments()
 {
 	if(categories.empty())

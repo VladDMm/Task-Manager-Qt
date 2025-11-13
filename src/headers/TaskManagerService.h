@@ -34,6 +34,7 @@ public:
 	void change_task(Task&);
 	void change_categorie(uint16_t category_id, std::string_view category_title);
 	std::unordered_map<uint16_t, Category> get_categories();
+	std::pair<uint16_t, Category> get_category_by_id(uint16_t& id);
 	std::unordered_map<uint16_t, Comment> get_comments();
 	std::unordered_map<uint16_t, Task> get_tasks();
 	Task get_task(uint16_t id);
