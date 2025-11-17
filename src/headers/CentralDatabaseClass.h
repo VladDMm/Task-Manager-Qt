@@ -26,14 +26,16 @@ public:
 
 	uint16_t add_task(const Task& task);
 	uint16_t add_category(std::string_view category_title);
-	void add_task_to_category(uint16_t task_id, uint16_t category_id);
-	void update_category_for_task(TaskService &t);
-	int16_t update_task(Task&);
+	void add_task_to_category(uint16_t& task_id, uint16_t& category_id);
+	void update_category_for_task(uint16_t& task_id, uint16_t& category_id);
+	void update_task(Task&);
+	void update_category(Category& category);
 	std::unordered_map<uint16_t, Category> get_categories();
 	std::unordered_map<uint16_t, Comment> get_comments();
 	std::unordered_map<uint16_t, Task> get_tasks();
 	int16_t delete_task(uint16_t& id);
 	int16_t delete_category(uint16_t& id);
+	void delete_task_from_category(uint16_t task_id, uint16_t category_id);
 
 	~Database() {
 		//std::cout << "[~Database] Destructor called\n";

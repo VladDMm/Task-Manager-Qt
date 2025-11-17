@@ -22,18 +22,19 @@ public:
 	// Tasks Methods
 	virtual uint16_t add_task(const Task&)								= 0;
 	virtual uint16_t add_category(std::string_view category_title)		= 0;
-	virtual void add_task_to_category(uint16_t, uint16_t)				= 0;
-	virtual void update_category_for_task(TaskService &)				= 0;
+	virtual void add_task_to_category(uint16_t&, uint16_t&)				= 0;
+	virtual void update_category_for_task(uint16_t&, uint16_t&)			= 0;
+	virtual void update_category(Category& category)					= 0;
+	virtual void update_task(Task&)										= 0;
 	virtual std::unordered_map<uint16_t, Category> get_categories()		= 0;
 	virtual std::unordered_map<uint16_t, Comment> get_comments()		= 0;
 	virtual std::unordered_map<uint16_t, Task> get_tasks()				= 0;
-	virtual int16_t update_task(Task&)									= 0;
 	virtual int16_t delete_task(uint16_t &)								= 0;
 	virtual int16_t delete_category(uint16_t &)							= 0;
+	virtual void delete_task_from_category(uint16_t task_id, uint16_t category_id) = 0;
 
 	virtual ~IDatabaseService()											= default;
 };
-
 
 class MySQLService : public IDatabaseService
 {
@@ -51,16 +52,18 @@ public:
 														
 	uint16_t add_task(const Task& task)							override;
 	uint16_t add_category(std::string_view category_title)		override;
-	void add_task_to_category(uint16_t, uint16_t)				override;
-	void update_category_for_task(TaskService &)				override;
+	void add_task_to_category(uint16_t&, uint16_t&)				override;
+	void update_category_for_task(uint16_t&, uint16_t&)			override;
+	void update_category(Category& category)					override;
+	void update_task(Task&)										override;
 	std::unordered_map<uint16_t, Category> get_categories()		override;
 	std::unordered_map<uint16_t, Comment> get_comments()		override;
 	std::unordered_map<uint16_t, Task> get_tasks()				override;
-	int16_t update_task(Task&)									override;
 	int16_t delete_task(uint16_t&)								override;
 	int16_t delete_category(uint16_t&)							override;
+	void delete_task_from_category(uint16_t task_id, uint16_t category_id)	override;
 
-	~MySQLService() = default;
+	~MySQLService()												= default;
 };	
 
 extern MySQLService msql_srv;

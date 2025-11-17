@@ -1,4 +1,4 @@
-﻿#include "headers/AddTaskW.h"
+#include "headers/EditCategoryW.h"
 #include "headers/Task.h"
 #include "headers/TaskManagerService.h"
 
@@ -12,10 +12,11 @@
 #include <QComboBox>
 #include <QMessageBox>
 #include <QCloseEvent>
+#include <QListWidgetItem>
 
-AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
+EditCategoryWindow::EditCategoryWindow(QWidget* parent) : QWidget(parent)
 {
-    setWindowTitle("Add Task");
+    setWindowTitle("Edit Category");
     setStyleSheet(R"(
             QFrame {
                 background-color: #ffffff;
@@ -51,25 +52,25 @@ AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
         )");
 
     edit_frame = new QFrame(this);
-    
+
     QVBoxLayout* vertical_l_objects = new QVBoxLayout(edit_frame);
-    
+
     confirm_btn = new QPushButton("Confirm");
     confirm_btn->setCursor(Qt::PointingHandCursor);
-    
+
     cancel_btn = new QPushButton("Cancel");
     cancel_btn->setCursor(Qt::PointingHandCursor);
 
     title_line = new QLineEdit;
     title_line->setPlaceholderText("Title Task");
-    
+
     description_line = new QTextEdit;
     description_line->setPlaceholderText("Description");
 
     //============initialize categories==================
     categorie_item = new QComboBox;
     categorie_item->addItem("Select Category", QVariant(0));
-        
+
     //===================================================
     priority_lvl_item = new QComboBox;
     priority_lvl_item->addItem("Select Priority");
@@ -77,8 +78,15 @@ AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
     priority_lvl_item->addItem("Medium", QVariant(1));
     priority_lvl_item->addItem("High", QVariant(2));
     //===================================================
+    status_lvl_item = new QComboBox;
+    status_lvl_item->addItem("To Do", QVariant(0));
+    status_lvl_item->addItem("In Progress", QVariant(1));
+    status_lvl_item->addItem("Done", QVariant(2));
+    //===================================================
+
     vertical_l_objects->addWidget(title_line);
     vertical_l_objects->addWidget(description_line);
+    vertical_l_objects->addWidget(status_lvl_item);
     vertical_l_objects->addWidget(categorie_item);
     vertical_l_objects->addWidget(priority_lvl_item);
     vertical_l_objects->addWidget(confirm_btn);
@@ -89,15 +97,15 @@ AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
     layout->setContentsMargins(20, 20, 20, 20);
     layout->addWidget(edit_frame);
 
-    connect(confirm_btn, &QPushButton::clicked, this, &AddTaskWindow::add_btn_pushed);
+    connect(confirm_btn, &QPushButton::clicked, this, &EditCategoryWindow::add_btn_pushed);
     connect(cancel_btn, &QPushButton::clicked, this, [this]() {
         this->close();
         });
 
-    connect(categorie_item, &QComboBox::currentIndexChanged, this, [&](uint16_t index) 
+    connect(categorie_item, &QComboBox::currentIndexChanged, this, [&](uint16_t index)
         {
             category_name = categorie_item->currentText();
-            category_id = categorie_item->itemData(index).toInt(); 
+            category_id = categorie_item->itemData(index).toInt();
         });
 
     connect(priority_lvl_item, &QComboBox::currentIndexChanged, this, [&](uint16_t index)
@@ -107,29 +115,29 @@ AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
         });
 }
 
-void AddTaskWindow::add_btn_pushed()
+void EditCategoryWindow::add_btn_pushed()
 {
     QString title = this->title_line->text();
     QString desc = this->description_line->toPlainText();
-    
+
     if (!category_name.isEmpty())
     {
-        Task task{ 0, title.toStdString(), desc.toStdString(), TaskStatus::TO_DO, static_cast<TaskPriority>(priority_id) };
-        uint16_t id_task = taskService_.add_task(std::move(task));
-        taskService_.add_task_to_category(id_task, Category{ category_id, category_name.toStdString() });
+       // Task task{ 0, title.toStdString(), desc.toStdString(), TaskStatus::TO_DO, static_cast<TaskPriority>(priority_id) };
+      //  uint16_t id_task = taskService_.add_task(std::move(task));
+        //taskService_.add_task_to_category(id_task, category_id);
         QMessageBox::information(this, "Success", "Successfully.");
         return;
     }
 
-    Task task{ 0, title.toStdString(), desc.toStdString(), TaskStatus::TO_DO, static_cast<TaskPriority>(priority_id) };
-    taskService_.add_task(std::move(task));
+  //  Task task{ 0, title.toStdString(), desc.toStdString(), TaskStatus::TO_DO, static_cast<TaskPriority>(priority_id) };
+   // taskService_.add_task(std::move(task));
     QMessageBox::information(this, "Success", "Successfully.");
 }
 
-void AddTaskWindow::initialize_components()
+void EditCategoryWindow::initialize_components()
 {
     auto categ_map_item = taskService_.get_categories();
-    
+
     if (categorie_item->count() < categ_map_item.size())
     {
         categorie_item->clear();
@@ -141,8 +149,13 @@ void AddTaskWindow::initialize_components()
     }
 }
 
-void AddTaskWindow::closeEvent(QCloseEvent* event)
+void EditCategoryWindow::closeEvent(QCloseEvent* event)
 {
     emit windowClosed();
     QWidget::closeEvent(event);
+}
+
+void EditCategoryWindow::set_category_item(QListWidgetItem* item)
+{
+    category_item = item;
 }

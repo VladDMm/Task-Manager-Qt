@@ -32,6 +32,6 @@ private slots:
     void showTasks();
     void showSettings();
 public:
-    void refreshTasks();
+   // void refreshTasks();
     
 };

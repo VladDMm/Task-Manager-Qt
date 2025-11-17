@@ -99,8 +99,8 @@ uint16_t MySQLService::add_task(const Task& task)
 	pstmt->setInt(1, current_user.get_id());
 	pstmt->setString(2, sql::SQLString(task.get_title().data()));
 	pstmt->setString(3, sql::SQLString(task.get_description().data()));
-	pstmt->setString(4, sql::SQLString(task.get_task_status().data()));
-	pstmt->setString(5, sql::SQLString(task.get_task_priority().data()));
+	pstmt->setString(4, sql::SQLString(task.get_task_status_to_string().data()));
+	pstmt->setString(5, sql::SQLString(task.get_task_priority_to_string().data()));
 
 	if (pstmt->executeUpdate())
 	{
@@ -125,7 +125,7 @@ uint16_t MySQLService::add_category(std::string_view category_title)
 
 	if (pstmt->executeUpdate())
 	{
-		// return real id for task
+		// return real id for category
 		STMT stmt{ this->con->createStatement() };
 		RES_SET res = RES_SET(stmt->executeQuery("SELECT LAST_INSERT_ID() AS id"));
 		if (res->next())
@@ -135,10 +135,10 @@ uint16_t MySQLService::add_category(std::string_view category_title)
 	return 0;
 }
 
-void MySQLService::add_task_to_category(uint16_t task_id, uint16_t category_id)
+void MySQLService::add_task_to_category(uint16_t& task_id, uint16_t& category_id)
 {
 	PSTMT pstmt = PSTMT(this->con->prepareStatement(
-		"INSERT INTO task_categories(task_id, category_id, user_id) VALUES (?, ?, ?)"
+		"INSERT INTO task_category(task_id, category_id, user_id) VALUES (?, ?, ?)"
 	));
 
 	pstmt->setInt(1, task_id);
@@ -148,22 +148,37 @@ void MySQLService::add_task_to_category(uint16_t task_id, uint16_t category_id)
 	pstmt->executeUpdate();
 }
 
-void MySQLService::update_category_for_task(TaskService&)
+void MySQLService::update_category_for_task(uint16_t& task_id, uint16_t& category_id)
 {
+	PSTMT pstmt = PSTMT(this->con->prepareStatement("UPDATE task_category SET category_id=? WHERE task_id = ? AND user_id = ?"));
+	pstmt->setInt(1, category_id);
+	pstmt->setInt(2, task_id);
+	pstmt->setInt(3, current_user.get_id());
 
+	pstmt->executeUpdate();
 }
 
-int16_t MySQLService::update_task(Task& task)
+void MySQLService::update_category(Category& category)
+{
+	PSTMT pstmt = PSTMT(this->con->prepareStatement("UPDATE categories SET title=? WHERE id = ? AND user_id = ?"));
+	pstmt->setString(1, category.title);
+	pstmt->setInt(2, category.id);
+	pstmt->setInt(3, current_user.get_id());
+
+	pstmt->executeUpdate();
+}
+
+void MySQLService::update_task(Task& task)
 {
 	PSTMT pstmt = PSTMT(this->con->prepareStatement("UPDATE tasks SET title=?, description=?, status=?, priority=? WHERE id = ? AND user_id = ?"));
 	pstmt->setString(1, task.get_title().data());
 	pstmt->setString(2, task.get_description().data());
-	pstmt->setString(3, task.get_task_priority().data());
-	pstmt->setString(4, task.get_task_priority());
+	pstmt->setString(3, task.get_task_status_to_string().data());
+	pstmt->setString(4, task.get_task_priority_to_string());
 	pstmt->setInt(5, task.get_id());
 	pstmt->setInt(6, current_user.get_id());
 
-	return pstmt->executeUpdate();
+	pstmt->executeUpdate();
 }
 
 std::unordered_map<uint16_t, Category> MySQLService::get_categories()
@@ -210,55 +225,87 @@ std::unordered_map<uint16_t, Comment> MySQLService::get_comments()
 
 std::unordered_map<uint16_t, Task> MySQLService::get_tasks()
 {
-	PSTMT pstmt = PSTMT(this->con->prepareStatement(
-		"SELECT id, title, description, status, priority FROM tasks WHERE user_id = ?"
-	));
-	pstmt->setInt(1, current_user.get_id());
-	RES_SET res = RES_SET(pstmt->executeQuery());
-
 	std::unordered_map<uint16_t, Task> local_result;
 
-	while (res->next())
+	// get all tasks for user
 	{
-		uint16_t id;
-		std::string title;
-		std::string description;
-		std::string status;
-		std::string priority;
+		PSTMT pstmt = PSTMT(this->con->prepareStatement(
+			"SELECT id, title, description, status, priority FROM tasks WHERE user_id = ?"
+		));
+		pstmt->setInt(1, current_user.get_id());
+		RES_SET res = RES_SET(pstmt->executeQuery());
 
-		id = res->getUInt("id");
-		title = res->getString("title");
-		description = res->getString("description");
-		status = res->getString("status");
-		priority = res->getString("priority");
-
-		uint16_t u_status, u_priority;
-		switch (status[0])
+		while (res->next())
 		{
-		case 'T': u_status = 0; break;
-		case 'I': u_status = 1; break;
-		case 'D': u_status = 2; break;
-		default:
-			u_status = 0;
-			break;
+			uint16_t id;
+			std::string title;
+			std::string description;
+			std::string status;
+			std::string priority;
+
+			id = res->getUInt("id");
+			title = res->getString("title");
+			description = res->getString("description");
+			status = res->getString("status");
+			priority = res->getString("priority");
+
+			uint16_t u_status, u_priority;
+			switch (status[0])
+			{
+			case 'T': u_status = 0; break;
+			case 'I': u_status = 1; break;
+			case 'D': u_status = 2; break;
+			default:
+				u_status = 0;
+				break;
+			}
+
+			switch (priority[0])
+			{
+			case 'L': u_priority = 0; break;
+			case 'M': u_priority = 1; break;
+			case 'H': u_priority = 2; break;
+			default:
+				break;
+			}
+
+			local_result.emplace(id, (Task{ id, title, description,
+				static_cast<TaskStatus>(u_status), static_cast<TaskPriority>(u_priority) }));
 		}
 
-		switch (priority[0])
-		{
-		case 'L': u_priority = 0; break;
-		case 'M': u_priority = 1; break;
-		case 'H': u_priority = 2; break;
-		default:
-			break;
-		}
-
-		local_result.emplace(id, (Task{ id, title, description,
-			static_cast<TaskStatus>(u_status), static_cast<TaskPriority>(u_priority) }));
 	}
+	// inititalizing all task with his category
+	{
+		auto it = local_result.begin();
 
+		while (it != local_result.end())
+		{
+			PSTMT pstmt = PSTMT(this->con->prepareStatement(
+				"SELECT tk.category_id AS id, c.title AS title FROM categories c "
+				" LEFT JOIN task_category tk ON tk.category_id = c.id "
+				" WHERE tk.task_id = ? AND tk.user_id = ?"
+			));
+			pstmt->setInt(1, it->first);
+			pstmt->setInt(2, current_user.get_id());
+			RES_SET res = RES_SET(pstmt->executeQuery());
+
+			while (res->next())
+			{
+				uint16_t id;
+				std::string title;
+
+				id = res->getUInt("id");
+				title = res->getString("title");
+
+				it->second.set_category(id, title);
+			}
+			++it;
+		}
+		
+	}
+	
 	return local_result;
 }
-
 
 int16_t MySQLService::delete_task(uint16_t& task_id)
 {
@@ -284,5 +331,15 @@ int16_t MySQLService::delete_category(uint16_t& category_id)
 	return pstmt->executeUpdate();
 }
 
+void MySQLService::delete_task_from_category(uint16_t task_id, uint16_t category_id)
+{
+	PSTMT pstmt = PSTMT(this->con->prepareStatement(
+		"DELETE FROM task_category WHERE task_id = ? AND category_id = ? AND user_id = ?"
+	));
 
+	pstmt->setInt(1, task_id);
+	pstmt->setInt(2, category_id);
+	pstmt->setInt(3, current_user.get_id());
 
+	pstmt->executeUpdate();
+}

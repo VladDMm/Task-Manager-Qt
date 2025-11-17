@@ -9,6 +9,9 @@ class QListWidget;
 class AddTaskWindow;
 class AddCategoryWindow;
 class EditTaskWindow;
+class EditCategoryWindow;
+class QPoint;
+class QListWidgetItem;
 
 class MyTasksWidget : public QWidget
 {
@@ -18,6 +21,7 @@ private:
     AddTaskWindow*      task_window;
     AddCategoryWindow*  category_window;
     EditTaskWindow*     edit_task_window;
+    EditCategoryWindow* edit_category_window;
 
     QFrame*             card_tasks_frame;
     QFrame*             card_categories_frame;
@@ -43,14 +47,14 @@ signals:
 public slots:
     void show_add_task_window();
     void show_add_category_window();
-    void show_edit_task_window();
-    void refresh_task_list();
+    void show_edit_task_window(QListWidgetItem* item);
+    void show_edit_category_window(QListWidgetItem* item);
+    void refresh_task_list(); 
     void refresh_category_list();
 private slots:
     void showContextMenu(const QPoint& pos);
 
 public:
     MyTasksWidget(QWidget* parent = nullptr);
-
 
 };

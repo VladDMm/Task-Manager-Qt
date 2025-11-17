@@ -102,9 +102,9 @@ void MainWindow::showSettings() {
     stackedLayout->setCurrentWidget(settingsWidget);
 }
 
-void MainWindow::refreshTasks() {
-    tasksWidget->refresh_task_list();
-}
+//void MainWindow::refreshTasks() {
+//    tasksWidget->refresh_task_list();
+//}
 
 //
 //QWidget* MainWindow::createDashboardWidget()

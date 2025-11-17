@@ -10,18 +10,15 @@ class QTextEdit;
 class QListWidgetItem;
 struct Category;
 
-class EditTaskWindow : public QWidget
+class EditCategoryWindow : public QWidget
 {
     Q_OBJECT
 
 private:
     uint16_t        priority_id;
-    // se foloseste pentru a pastra id-ul original la categorie pentru a opera cu update in DB corect
-    uint16_t        original_category_id; 
-    // se foloseste in caz ca se selecteaza alta categorie
-    uint16_t        temporar_category_id; 
+    QString         priority_name;
+    uint16_t        category_id;
     QString         category_name;
-    uint16_t        status_id;
 
     QFrame*         edit_frame;
     QLineEdit*      title_line;
@@ -31,11 +28,10 @@ private:
     QComboBox*      status_lvl_item;
     QPushButton*    cancel_btn;
     QPushButton*    confirm_btn;
-
-    QListWidgetItem* task_item;
+    QListWidgetItem* category_item;
 
 private slots:
-    void confirm_btn_pushed();
+    void add_btn_pushed();
     void closeEvent(QCloseEvent* event);
 
 public slots:
@@ -45,7 +41,6 @@ signals:
     void windowClosed();
 
 public:
-    EditTaskWindow(QWidget* parent = nullptr);
-    void set_task_item(QListWidgetItem* item);
-
+    EditCategoryWindow(QWidget* parent = nullptr);
+    void set_category_item(QListWidgetItem* item);
 };

@@ -3,10 +3,11 @@
 #include "headers/AddCategoryW.h"
 #include "headers/TaskManagerService.h"
 #include "headers/EditTaskW.h"
+#include "headers/EditCategoryW.h"
 #include "mysql/jdbc.h"
 
-
 #include <QFrame>
+#include <QSet>
 #include <QMessageBox>
 #include <QVBoxLayout>
 #include <QLabel>
@@ -14,6 +15,7 @@
 #include <QPoint>
 #include <QPushButton>
 #include <QListWidget>
+#include <QListWidgetItem>
 #include <QGraphicsDropShadowEffect>
 
 
@@ -125,13 +127,17 @@ MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 	task_window = new AddTaskWindow;
 	edit_task_window = new EditTaskWindow;
 	category_window = new AddCategoryWindow;
+	edit_category_window = new EditCategoryWindow;
 
 	connect(task_list, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 	connect(new_task_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_task_window);
 	connect(new_categorie_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_category_window);
-	connect(task_list, &QListWidget::itemDoubleClicked, this, &MyTasksWidget::show_edit_task_window);
+	connect(task_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) { this->show_edit_task_window(item); });
+	connect(category_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) {this->show_edit_category_window(item); });
 	connect(task_window, &AddTaskWindow::windowClosed, this, &MyTasksWidget::refresh_task_list);
+	connect(edit_task_window, &EditTaskWindow::windowClosed, this, &MyTasksWidget::refresh_task_list);
 	connect(category_window, &AddCategoryWindow::windowClosed, this, &MyTasksWidget::refresh_category_list);
+	connect(edit_category_window, &EditCategoryWindow::windowClosed, this, &MyTasksWidget::refresh_category_list);
 	connect(new_task_btn, &QPushButton::clicked, task_window, &AddTaskWindow::initialize_components);
 }
 
@@ -139,9 +145,18 @@ void MyTasksWidget::show_add_task_window()
 {
 	task_window->show();
 }
-void MyTasksWidget::show_edit_task_window()
+void MyTasksWidget::show_edit_task_window(QListWidgetItem* item)
 {
+	edit_task_window->set_task_item(item);
+	edit_task_window->initialize_components();
 	edit_task_window->show();
+}
+
+void MyTasksWidget::show_edit_category_window(QListWidgetItem* item)
+{
+	edit_category_window->set_category_item(item);
+	//edit_category_window->initialize_components();
+	edit_category_window->show();
 }
 
 void MyTasksWidget::show_add_category_window()
@@ -152,7 +167,52 @@ void MyTasksWidget::show_add_category_window()
 void MyTasksWidget::refresh_task_list()
 {
 	auto tasks = taskService_.get_tasks();
-	if (task_list->count() < tasks.size())
+	QSet<uint16_t> current_ids;
+
+	for (uint16_t i = 0; i < task_list->count(); ++i)
+	{
+		// salvez id-urile pentru comparare ulterioare daca exista in lista sau nu
+		current_ids.insert(task_list->item(i)->data(Qt::UserRole).toInt());
+	}
+
+	for (auto& [id, task] : tasks)
+	{
+		if (!current_ids.contains(id)) // daca nu exista task-ul in lista, il adaug
+		{
+			QListWidgetItem* task_item = new QListWidgetItem;
+			task_item->setText(task.get_title().data());
+			task_item->setData(Qt::UserRole, id);
+			task_list->addItem(task_item);
+		}
+		else // daca exista task-ul in lista, doar actualizez titlul
+		{
+			for (uint16_t i = 0; i < task_list->count(); ++i)
+			{
+				if (task_list->item(i)->data(Qt::UserRole).toInt() == id)
+				{
+					task_list->item(i)->setText(task.get_title().data());
+					break;
+				}
+			}
+		}
+	}
+
+	/*if (flag)
+	{
+		if (task_list->count() < tasks.size())
+		{
+			task_list->clear();
+			for (auto& [id, task] : tasks)
+			{
+				QListWidgetItem* task_item = new QListWidgetItem;
+				task_item->setText(task.get_title().data());
+				task_item->setData(Qt::UserRole, id);
+				task_list->addItem(task_item);
+			}
+			card_tasks_frame->update();
+		}
+	}
+	else
 	{
 		task_list->clear();
 		for (auto& [id, task] : tasks)
@@ -163,24 +223,71 @@ void MyTasksWidget::refresh_task_list()
 			task_list->addItem(task_item);
 		}
 		card_tasks_frame->update();
-	}
+	}*/
+
+	card_tasks_frame->update();
 }
 
 void MyTasksWidget::refresh_category_list()
 {
 	auto categories = taskService_.get_categories();
-	if (category_list->count() < categories.size())
+
+	QSet<uint16_t> current_ids;
+
+	for (uint16_t i = 0; i < category_list->count(); ++i)
 	{
-		category_list->clear();
-		for (auto& [id, category] : categories)
-		{
-			QListWidgetItem* categ_item = new QListWidgetItem;
-			categ_item->setText(category.title.c_str());
-			categ_item->setData(Qt::UserRole, id);
-			category_list->addItem(categ_item);
-		}
-		card_categories_frame->update();
+		// salvez id-urile pentru comparare ulterioare daca exista in lista sau nu
+		current_ids.insert(category_list->item(i)->data(Qt::UserRole).toInt());
 	}
+
+	for (auto& [id, category] : categories)
+	{
+		if (!current_ids.contains(id)) // daca nu exista categoria in lista, o adaug
+		{
+			QListWidgetItem* category_item = new QListWidgetItem;
+			category_item->setText(category.title.c_str());
+			category_item->setData(Qt::UserRole, id);
+			category_list->addItem(category_item);
+		}
+		else // daca exista categoria in lista, doar actualizez titlul
+		{
+			for (uint16_t i = 0; i < category_list->count(); ++i)
+			{
+				if (category_list->item(i)->data(Qt::UserRole).toInt() == id)
+				{
+					category_list->item(i)->setText(category.title.c_str());
+					break;
+				}
+			}
+		}
+	}
+	card_categories_frame->update();
+
+	//if (flag)
+	//	if (category_list->count() < categories.size())
+	//	{
+	//		category_list->clear();
+	//		for (auto& [id, category] : categories)
+	//		{
+	//			QListWidgetItem* categ_item = new QListWidgetItem;
+	//			categ_item->setText(category.title.c_str());
+	//			categ_item->setData(Qt::UserRole, id);
+	//			category_list->addItem(categ_item);
+	//		}
+	//		card_categories_frame->update();
+	//	}
+	//	else
+	//	{
+	//		category_list->clear();
+	//		for (auto& [id, category] : categories)
+	//		{
+	//			QListWidgetItem* categ_item = new QListWidgetItem;
+	//			categ_item->setText(category.title.c_str());
+	//			categ_item->setData(Qt::UserRole, id);
+	//			category_list->addItem(categ_item);
+	//		}
+	//		card_categories_frame->update();
+	//	}
 }
 
 void MyTasksWidget::showContextMenu(const QPoint& pos) {
@@ -194,7 +301,7 @@ void MyTasksWidget::showContextMenu(const QPoint& pos) {
 	QMenu* contextMenu = new QMenu(this);
 	contextMenu->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
 	contextMenu->setAttribute(Qt::WA_TranslucentBackground);
-	
+
 	contextMenu->setStyleSheet(R"(
     QMenu {
         background-color: #faf8f2;
@@ -226,13 +333,15 @@ void MyTasksWidget::showContextMenu(const QPoint& pos) {
 	QAction* deleteAction = contextMenu->addAction("Delete Item");
 	QAction* editAction = contextMenu->addAction("Edit Item");
 
-	connect(deleteAction, &QAction::triggered, [this, item]() 
+	connect(deleteAction, &QAction::triggered, [this, item]()
 		{
 			taskService_.delete_task(item->data(Qt::UserRole).toInt());
 			delete task_list->takeItem(task_list->row(item));
 		});
 	connect(editAction, &QAction::triggered, [this, item]()
 		{
+			edit_task_window->set_task_item(item);
+			edit_task_window->initialize_components();
 			edit_task_window->show();
 		});
 

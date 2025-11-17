@@ -28,19 +28,24 @@ uint16_t Database::add_category(std::string_view category_title)
     return db_service->add_category(category_title);
 }
 
-void Database::add_task_to_category(uint16_t task_id, uint16_t category_id)
+void Database::add_task_to_category(uint16_t& task_id, uint16_t& category_id)
 {
     db_service->add_task_to_category(task_id, category_id);
 }
 
-void Database::update_category_for_task(TaskService & t)
+void Database::update_category_for_task(uint16_t& task_id, uint16_t& category_id)
 {
-  
+    db_service->update_category_for_task(task_id, category_id);
 }
 
-int16_t Database::update_task(Task& task)
+void Database::update_task(Task& task)
 {
-    return db_service->update_task(task);
+    db_service->update_task(task);
+}
+
+void Database::update_category(Category& category)
+{
+    db_service->update_category(category);
 }
 
 std::unordered_map<uint16_t, Category> Database::get_categories()
@@ -67,4 +72,8 @@ int16_t Database::delete_task(uint16_t& id)
 int16_t Database::delete_category(uint16_t& id)
 {
     return 0;
+}
+void Database::delete_task_from_category(uint16_t task_id, uint16_t category_id)
+{
+    db_service->delete_task_from_category(task_id, category_id);
 }
