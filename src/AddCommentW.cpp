@@ -1,22 +1,20 @@
-#include "headers/EditCategoryW.h"
+#include "headers/AddCommentW.h"
+
 #include "headers/Task.h"
 #include "headers/TaskManagerService.h"
-
 
 #include <QFrame>
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QTextEdit>
 #include <QLineEdit>
-#include <QComboBox>
-#include <QMessageBox>
+#include <QTextEdit>
 #include <QCloseEvent>
-#include <QListWidgetItem>
+#include <QMessageBox>
 
-EditCategoryWindow::EditCategoryWindow(QWidget* parent) : QWidget(parent)
+AddCommentWindow::AddCommentWindow(QWidget* parent) : QWidget(parent)
 {
-    setWindowTitle("Edit Category");
+    setWindowTitle("Add Comment");
     setStyleSheet(R"(
             QFrame {
                 background-color: #ffffff;
@@ -39,18 +37,16 @@ EditCategoryWindow::EditCategoryWindow(QWidget* parent) : QWidget(parent)
             QPushButton:hover {
                 background-color: #3c7cd4;
             }
-            QLineEdit {
-                background: white;
-                border: 1px solid black;
-                border-radius: 10px;
-                font-size: 15px;
-            }
             QTextEdit {
-                border-radius: 10px;
-                font-size: 15px;
-            }
+            background: white;
+            border: 1px solid black;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
         )");
     setMinimumSize(250, 200);
+
     edit_frame = new QFrame(this);
 
     QVBoxLayout* vertical_l_objects = new QVBoxLayout(edit_frame);
@@ -61,10 +57,10 @@ EditCategoryWindow::EditCategoryWindow(QWidget* parent) : QWidget(parent)
     cancel_btn = new QPushButton("Cancel");
     cancel_btn->setCursor(Qt::PointingHandCursor);
 
-    title_line = new QLineEdit;
-    title_line->setPlaceholderText("Title Category");
+    comment_line = new QTextEdit;
+    comment_line->setPlaceholderText("Text");
 
-    vertical_l_objects->addWidget(title_line);
+    vertical_l_objects->addWidget(comment_line);
     vertical_l_objects->addWidget(confirm_btn);
     vertical_l_objects->addWidget(cancel_btn);
 
@@ -73,34 +69,36 @@ EditCategoryWindow::EditCategoryWindow(QWidget* parent) : QWidget(parent)
     layout->setContentsMargins(20, 20, 20, 20);
     layout->addWidget(edit_frame);
 
-    connect(confirm_btn, &QPushButton::clicked, this, &EditCategoryWindow::add_btn_pushed);
+    connect(confirm_btn, &QPushButton::clicked, this, &AddCommentWindow::add_btn_pushed);
     connect(cancel_btn, &QPushButton::clicked, this, [this]() {
         this->close();
         });
 }
 
-void EditCategoryWindow::add_btn_pushed()
+void AddCommentWindow::add_btn_pushed()
 {
-    category_name = this->title_line->text();
-    Category category { category_id, category_name.toStdString() };
-    taskService_.update_category(category);
+    QString txt = this->comment_line->toPlainText();
 
-    QMessageBox::information(this, "Success", "Successfully.");
+    if (txt.isEmpty())
+    {
+        QMessageBox::warning(this, "Input Error", "Please enter a comment.");
+        return;
+    }
+
+    try
+    {
+        taskService_.add_comment(txt.toStdString());
+        QMessageBox::information(this, "Success", "Successfully.");
+    }
+    catch (const std::exception& e)
+    {
+        QMessageBox::warning(this, "Error", e.what());
+        return;
+    }
 }
 
-void EditCategoryWindow::initialize_components()
-{
-    title_line->setText(category_item->text());
-    category_id = category_item->data(Qt::UserRole).toInt();
-}
-
-void EditCategoryWindow::closeEvent(QCloseEvent* event)
+void AddCommentWindow::closeEvent(QCloseEvent* event)
 {
     emit windowClosed();
     QWidget::closeEvent(event);
-}
-
-void EditCategoryWindow::set_category_item(QListWidgetItem* item)
-{
-    category_item = item;
 }

@@ -47,6 +47,7 @@ AddCategoryWindow::AddCategoryWindow(QWidget* parent) : QWidget(parent)
             font-size: 15px;
         }
         )");
+    setMinimumSize(250, 200);
 
     edit_frame = new QFrame(this);
 

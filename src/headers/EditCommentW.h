@@ -4,25 +4,24 @@
 
 class QFrame;
 class QPushButton;
-class QLineEdit;
 class QComboBox;
 class QTextEdit;
 class QListWidgetItem;
 struct Category;
 
-class EditCategoryWindow : public QWidget
+class EditCommentWindow : public QWidget
 {
     Q_OBJECT
 
 private:
-    uint16_t        category_id;
-    QString         category_name;
+    uint16_t            comment_id;
+    QString             comment_text;
 
-    QFrame*         edit_frame;
-    QLineEdit*      title_line;
-    QPushButton*    cancel_btn;
-    QPushButton*    confirm_btn;
-    QListWidgetItem* category_item;
+    QFrame*             edit_frame;
+    QTextEdit*          text_line;
+    QPushButton*        cancel_btn;
+    QPushButton*        confirm_btn;
+    QListWidgetItem*    comment_item;
 
 private slots:
     void add_btn_pushed();
@@ -35,6 +34,6 @@ signals:
     void windowClosed();
 
 public:
-    EditCategoryWindow(QWidget* parent = nullptr);
+    EditCommentWindow(QWidget* parent = nullptr);
     void set_category_item(QListWidgetItem* item);
 };

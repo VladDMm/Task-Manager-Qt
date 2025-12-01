@@ -87,6 +87,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(sidePanel, &SidePanel::settingsClicked, this, &MainWindow::showSettings);
     connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_task_list);
     connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_category_list);
+    connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_comment_list);
 }
 
 

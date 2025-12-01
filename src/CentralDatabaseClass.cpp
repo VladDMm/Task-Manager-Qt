@@ -33,6 +33,11 @@ void Database::add_task_to_category(uint16_t& task_id, uint16_t& category_id)
     db_service->add_task_to_category(task_id, category_id);
 }
 
+uint16_t Database::add_comment(std::string_view text)
+{
+    return db_service->add_comment(text);
+}
+
 void Database::update_category_for_task(uint16_t& task_id, uint16_t& category_id)
 {
     db_service->update_category_for_task(task_id, category_id);
@@ -41,6 +46,11 @@ void Database::update_category_for_task(uint16_t& task_id, uint16_t& category_id
 void Database::update_task(Task& task)
 {
     db_service->update_task(task);
+}
+
+void Database::update_comment(Comment& comment)
+{
+    db_service->update_comment(comment);
 }
 
 void Database::update_category(Category& category)
@@ -64,15 +74,21 @@ std::unordered_map<uint16_t, Task> Database::get_tasks()
 }
 
 
-int16_t Database::delete_task(uint16_t& id)
+void Database::delete_task(uint16_t& id)
 {
-    return db_service->delete_task(id);
+    db_service->delete_task(id);
 }
 
-int16_t Database::delete_category(uint16_t& id)
+void Database::delete_category(uint16_t& id)
 {
-    return 0;
+    db_service->delete_category(id);
 }
+
+void Database::delete_comment(uint16_t& id)
+{
+    db_service->delete_comment(id);
+}
+
 void Database::delete_task_from_category(uint16_t task_id, uint16_t category_id)
 {
     db_service->delete_task_from_category(task_id, category_id);

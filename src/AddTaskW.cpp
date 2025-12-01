@@ -69,13 +69,8 @@ AddTaskWindow::AddTaskWindow(QWidget* parent) : QWidget(parent)
     //============initialize categories==================
     categorie_item = new QComboBox;
     categorie_item->addItem("Select Category", QVariant(0));
-        
-    //===================================================
+    //
     priority_lvl_item = new QComboBox;
-    priority_lvl_item->addItem("Select Priority");
-    priority_lvl_item->addItem("Low", QVariant(0));
-    priority_lvl_item->addItem("Medium", QVariant(1));
-    priority_lvl_item->addItem("High", QVariant(2));
     //===================================================
     vertical_l_objects->addWidget(title_line);
     vertical_l_objects->addWidget(description_line);
@@ -139,6 +134,11 @@ void AddTaskWindow::initialize_components()
             categorie_item->addItem(cat.title.c_str(), QVariant(id));
         }
     }
+
+    priority_lvl_item->addItem("Select Priority");
+    priority_lvl_item->addItem("Low", QVariant(0));
+    priority_lvl_item->addItem("Medium", QVariant(1));
+    priority_lvl_item->addItem("High", QVariant(2));
 }
 
 void AddTaskWindow::closeEvent(QCloseEvent* event)

@@ -190,18 +190,18 @@ void EditTaskWindow::initialize_components()
 	//}
 	//auto v = categ_map_item.find(task_category_id) != categ_map_item.end() ? categ_map_item.find(task_category_id)->second.title.c_str() : "Select Category";
 
-	categorie_item->setCurrentIndex(task_category_id);
+	categorie_item->setCurrentIndex(categorie_item->findData(task_category_id));
+
 	category_name = categorie_item->currentText();
 	original_category_id = task_category_id;
 	//
 
 	// initializing priority combo box
-	priority_lvl_item->setCurrentIndex(local_task.get_task_priority_to_uint());
+	priority_lvl_item->setCurrentIndex(priority_lvl_item->findData(local_task.get_task_priority_to_uint()));
 	//
 
 	// initializing task status combo box
-	status_id = local_task.get_task_status_to_uint();
-	status_lvl_item->setCurrentIndex(status_id);
+	status_lvl_item->setCurrentIndex(status_lvl_item->findData(local_task.get_task_status_to_uint()));
 	//
 }
 

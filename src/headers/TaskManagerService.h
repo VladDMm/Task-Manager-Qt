@@ -29,9 +29,11 @@ public:
 	uint16_t add_task(Task task);
 	uint16_t add_category(std::string_view category_title);
 	void add_task_to_category(uint16_t task_id, Category category);
+	void add_comment(std::string_view text);
 	void update_category_for_task(uint16_t task_id, Category category);
 	void update_task(Task&);
 	void update_category(Category& category);
+	void update_comment(Comment& comment);
 	std::unordered_map<uint16_t, Category> get_categories();
 	std::pair<uint16_t, Category> get_category_by_id(uint16_t& id);
 	std::unordered_map<uint16_t, Comment> get_comments();
@@ -43,6 +45,7 @@ public:
 
 	void delete_task(uint16_t task_id);
 	void delete_category(uint16_t category_id);
+	void delete_comment(uint16_t comment_id);
 	void delete_task_from_category(uint16_t task_id, uint16_t category_id);
 
 };	extern TaskService taskService_;

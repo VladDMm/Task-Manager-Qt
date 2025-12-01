@@ -162,12 +162,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AddCategoryW.cpp" />
+    <ClCompile Include="src\AddCommentW.cpp" />
     <ClCompile Include="src\AddTaskW.cpp" />
     <ClCompile Include="src\ApplicationController.cpp" />
     <ClCompile Include="src\AuthWindow.cpp" />
     <ClCompile Include="src\CentralDatabaseClass.cpp" />
     <ClCompile Include="src\DashboardW.cpp" />
     <ClCompile Include="src\EditCategoryW.cpp" />
+    <ClCompile Include="src\EditComment.cpp" />
     <ClCompile Include="src\EditTaskW.cpp" />
     <ClCompile Include="src\IMySQLService.cpp" />
     <ClCompile Include="src\MainWindow.cpp" />
@@ -187,10 +189,12 @@
     <QtMoc Include="src\headers\ApplicationController.h" />
     <QtMoc Include="src\headers\AddTaskW.h" />
     <QtMoc Include="src\headers\AddCategoryW.h" />
+    <QtMoc Include="src\headers\AddCommentW.h" />
     <ClInclude Include="src\headers\CentralDatabaseClass.h" />
     <QtMoc Include="src\headers\DashboardW.h" />
     <QtMoc Include="src\headers\EditTaskW.h" />
     <QtMoc Include="src\headers\EditCategoryW.h" />
+    <QtMoc Include="src\headers\EditCommentW.h" />
     <ClInclude Include="src\headers\EnumTypes.h" />
     <ClInclude Include="src\headers\IdCacheService.h" />
     <ClInclude Include="src\headers\IMySQLService.h" />

@@ -87,6 +87,12 @@
     <ClCompile Include="src\EditCategoryW.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\AddCommentW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditComment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\CentralDatabaseClass.h">
@@ -160,6 +166,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\headers\EditCategoryW.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\headers\AddCommentW.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\headers\EditCommentW.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

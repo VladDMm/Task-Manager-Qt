@@ -148,6 +148,26 @@ void MySQLService::add_task_to_category(uint16_t& task_id, uint16_t& category_id
 	pstmt->executeUpdate();
 }
 
+uint16_t MySQLService::add_comment(std::string_view text)
+{
+		PSTMT pstmt = PSTMT(this->con->prepareStatement(
+			"INSERT INTO comments(text, user_id) VALUES (?, ?)"
+		));
+
+		pstmt->setString(1, text.data());
+		pstmt->setInt(2, current_user.get_id());
+
+		if (pstmt->executeUpdate())
+		{
+			STMT stmt = STMT(this->con->createStatement());
+			RES_SET res = RES_SET(stmt->executeQuery("SELECT LAST_INSERT_ID() AS id"));
+			if (res->next())
+				return res->getInt("id");
+		}
+
+		return 0;
+}
+
 void MySQLService::update_category_for_task(uint16_t& task_id, uint16_t& category_id)
 {
 	PSTMT pstmt = PSTMT(this->con->prepareStatement("UPDATE task_category SET category_id=? WHERE task_id = ? AND user_id = ?"));
@@ -160,7 +180,7 @@ void MySQLService::update_category_for_task(uint16_t& task_id, uint16_t& categor
 
 void MySQLService::update_category(Category& category)
 {
-	PSTMT pstmt = PSTMT(this->con->prepareStatement("UPDATE categories SET title=? WHERE id = ? AND user_id = ?"));
+	PSTMT pstmt = PSTMT(this->con->prepareStatement("UPDATE categories SET title = ? WHERE id = ? AND user_id = ?"));
 	pstmt->setString(1, category.title);
 	pstmt->setInt(2, category.id);
 	pstmt->setInt(3, current_user.get_id());
@@ -177,6 +197,16 @@ void MySQLService::update_task(Task& task)
 	pstmt->setString(4, task.get_task_priority_to_string());
 	pstmt->setInt(5, task.get_id());
 	pstmt->setInt(6, current_user.get_id());
+
+	pstmt->executeUpdate();
+}
+
+void MySQLService::update_comment(Comment& comment)
+{
+	PSTMT pstmt = PSTMT(this->con->prepareStatement("UPDATE comments SET text = ? WHERE id = ? AND user_id = ?"));
+	pstmt->setString(1, comment.description);
+	pstmt->setInt(2, comment.id);
+	pstmt->setInt(3, current_user.get_id());
 
 	pstmt->executeUpdate();
 }
@@ -214,10 +244,10 @@ std::unordered_map<uint16_t, Comment> MySQLService::get_comments()
 	while (res->next())
 	{
 		uint16_t id;
-		std::string text;
+		std::string description;
 		id = res->getUInt("id");
-		text = res->getString("title");
-		local_result.emplace(id, Comment{ id, std::move(text) });
+		description = res->getString("text");
+		local_result.emplace(id, Comment{ id, std::move(description) });
 	}
 
 	return local_result;
@@ -307,28 +337,67 @@ std::unordered_map<uint16_t, Task> MySQLService::get_tasks()
 	return local_result;
 }
 
-int16_t MySQLService::delete_task(uint16_t& task_id)
+void MySQLService::delete_task(uint16_t& task_id)
 {
-	PSTMT pstmt = PSTMT(this->con->prepareStatement(
-		"DELETE FROM tasks WHERE id = ? AND user_id = ?"
-	));
+	{
+		PSTMT pstmt = PSTMT(this->con->prepareStatement(
+			"DELETE FROM tasks WHERE id = ? AND user_id = ?"
+		));
 
-	pstmt->setInt(1, task_id);
-	pstmt->setInt(2, current_user.get_id());
-	
-	return pstmt->executeUpdate();
+		pstmt->setInt(1, task_id);
+		pstmt->setInt(2, current_user.get_id());
+
+		pstmt->executeUpdate();
+	}
+	{
+		PSTMT pstmt = PSTMT(this->con->prepareStatement(
+			"ALTER TABLE tasks SET AUTO_INCREMENT = 1"
+		));
+
+		pstmt->executeUpdate();
+	}
 }
 
-int16_t MySQLService::delete_category(uint16_t& category_id)
+void MySQLService::delete_category(uint16_t& category_id)
 {
-	PSTMT pstmt = PSTMT(this->con->prepareStatement(
-		"DELETE FROM categories WHERE id = ? AND user_id = ?"
-	));
+	{
+		PSTMT pstmt = PSTMT(this->con->prepareStatement(
+			"DELETE FROM categories WHERE id = ? AND user_id = ?"
+		));
 
-	pstmt->setInt(1, category_id);
-	pstmt->setInt(2, current_user.get_id());
+		pstmt->setInt(1, category_id);
+		pstmt->setInt(2, current_user.get_id());
 
-	return pstmt->executeUpdate();
+		pstmt->executeUpdate();
+	}
+	{
+		PSTMT pstmt = PSTMT(this->con->prepareStatement(
+			"ALTER TABLE categories SET AUTO_INCREMENT = 1"
+		));
+
+		pstmt->executeUpdate();
+	}
+}
+
+void MySQLService::delete_comment(uint16_t& comment_id)
+{
+	{
+		PSTMT pstmt = PSTMT(this->con->prepareStatement(
+			"DELETE FROM comments WHERE id = ? AND user_id = ?"
+		));
+
+		pstmt->setInt(1, comment_id);
+		pstmt->setInt(2, current_user.get_id());
+
+		pstmt->executeUpdate();
+	}
+	{
+		PSTMT pstmt = PSTMT(this->con->prepareStatement(
+			"ALTER TABLE comments SET AUTO_INCREMENT = 1"
+		));
+
+		pstmt->executeUpdate();
+	}
 }
 
 void MySQLService::delete_task_from_category(uint16_t task_id, uint16_t category_id)

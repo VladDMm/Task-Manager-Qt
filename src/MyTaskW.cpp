@@ -4,6 +4,8 @@
 #include "headers/TaskManagerService.h"
 #include "headers/EditTaskW.h"
 #include "headers/EditCategoryW.h"
+#include "headers/EditCommentW.h"
+#include "headers/AddCommentW.h"
 #include "mysql/jdbc.h"
 
 #include <QFrame>
@@ -18,6 +20,7 @@
 #include <QListWidgetItem>
 #include <QGraphicsDropShadowEffect>
 
+static uint16_t flag_edit_item = 0;
 
 MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 {
@@ -67,6 +70,7 @@ MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 	hbox_category_top->addWidget(new_categorie_btn);
 
 	category_list = new QListWidget;
+	category_list->setContextMenuPolicy(Qt::CustomContextMenu);
 	vbox_categories->addLayout(hbox_category_top);
 	vbox_categories->addWidget(category_list);
 
@@ -124,26 +128,39 @@ MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 	grid->addWidget(card_comments_frame, 0, 1);
 	grid->addWidget(card_tasks_frame, 1, 0, 1, 2);
 
-	task_window = new AddTaskWindow;
-	edit_task_window = new EditTaskWindow;
-	category_window = new AddCategoryWindow;
-	edit_category_window = new EditCategoryWindow;
+	task_window =			new AddTaskWindow;
+	edit_task_window =		new EditTaskWindow;
+	category_window =		new AddCategoryWindow;
+	edit_category_window =	new EditCategoryWindow;
+	comment_window =		new AddCommentWindow;
+	edit_comment_window =	new EditCommentWindow;
 
-	connect(task_list, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
-	connect(new_task_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_task_window);
-	connect(new_categorie_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_category_window);
+	connect(task_list, &QListView::customContextMenuRequested, this, [this](const QPoint& p) { flag_edit_item = 1; this->showContextMenu(p); });
 	connect(task_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) { this->show_edit_task_window(item); });
+	connect(category_list, &QListView::customContextMenuRequested, this, [this](const QPoint& p) { flag_edit_item = 2; this->showContextMenu(p); });
 	connect(category_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) {this->show_edit_category_window(item); });
+	connect(comment_list, &QListView::customContextMenuRequested, this, [this](const QPoint& p) { flag_edit_item = 3; this->showContextMenu(p); });
+	connect(comment_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) {this->show_edit_comment_window(item); });
+	connect(new_task_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_task_window);
+	connect(new_task_btn, &QPushButton::clicked, task_window, &AddTaskWindow::initialize_components);
+	connect(new_categorie_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_category_window);
+	connect(new_comment_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_comment_window);
+	connect(comment_window, &AddCommentWindow::windowClosed, this, &MyTasksWidget::refresh_comment_list);
+	connect(edit_comment_window, &EditCommentWindow::windowClosed, this, &MyTasksWidget::refresh_comment_list);
 	connect(task_window, &AddTaskWindow::windowClosed, this, &MyTasksWidget::refresh_task_list);
 	connect(edit_task_window, &EditTaskWindow::windowClosed, this, &MyTasksWidget::refresh_task_list);
 	connect(category_window, &AddCategoryWindow::windowClosed, this, &MyTasksWidget::refresh_category_list);
 	connect(edit_category_window, &EditCategoryWindow::windowClosed, this, &MyTasksWidget::refresh_category_list);
-	connect(new_task_btn, &QPushButton::clicked, task_window, &AddTaskWindow::initialize_components);
+
 }
 
 void MyTasksWidget::show_add_task_window()
 {
 	task_window->show();
+}
+void MyTasksWidget::show_add_comment_window()
+{
+	comment_window->show();
 }
 void MyTasksWidget::show_edit_task_window(QListWidgetItem* item)
 {
@@ -155,8 +172,15 @@ void MyTasksWidget::show_edit_task_window(QListWidgetItem* item)
 void MyTasksWidget::show_edit_category_window(QListWidgetItem* item)
 {
 	edit_category_window->set_category_item(item);
-	//edit_category_window->initialize_components();
+	edit_category_window->initialize_components();
 	edit_category_window->show();
+}
+
+void MyTasksWidget::show_edit_comment_window(QListWidgetItem* item)
+{
+	edit_comment_window->set_category_item(item);
+	edit_comment_window->initialize_components();
+	edit_comment_window->show();
 }
 
 void MyTasksWidget::show_add_category_window()
@@ -290,9 +314,89 @@ void MyTasksWidget::refresh_category_list()
 	//	}
 }
 
+void MyTasksWidget::refresh_comment_list()
+{
+	auto comments = taskService_.get_comments();
+
+	QSet<uint16_t> current_ids;
+
+	for (uint16_t i = 0; i < comment_list->count(); ++i)
+	{
+		// salvez id-urile pentru comparare ulterioare daca exista in lista sau nu
+		current_ids.insert(comment_list->item(i)->data(Qt::UserRole).toInt());
+	}
+
+	for (auto& [id, comment] : comments)
+	{
+		if (!current_ids.contains(id)) // daca nu exista comentariul in lista, o adaug
+		{
+			QListWidgetItem* comment_item = new QListWidgetItem;
+			comment_item->setText(comment.description.c_str());
+			comment_item->setData(Qt::UserRole, id);
+			comment_list->addItem(comment_item);
+		}
+		else // daca exista comentariul in lista, doar actualizez descrierea
+		{
+			for (uint16_t i = 0; i < comment_list->count(); ++i)
+			{
+				if (comment_list->item(i)->data(Qt::UserRole).toInt() == id)
+				{
+					comment_list->item(i)->setText(comment.description.c_str());
+					break;
+				}
+			}
+		}
+	}
+	card_comments_frame->update();
+
+	//if (flag)
+	//	if (category_list->count() < categories.size())
+	//	{
+	//		category_list->clear();
+	//		for (auto& [id, category] : categories)
+	//		{
+	//			QListWidgetItem* categ_item = new QListWidgetItem;
+	//			categ_item->setText(category.title.c_str());
+	//			categ_item->setData(Qt::UserRole, id);
+	//			category_list->addItem(categ_item);
+	//		}
+	//		card_categories_frame->update();
+	//	}
+	//	else
+	//	{
+	//		category_list->clear();
+	//		for (auto& [id, category] : categories)
+	//		{
+	//			QListWidgetItem* categ_item = new QListWidgetItem;
+	//			categ_item->setText(category.title.c_str());
+	//			categ_item->setData(Qt::UserRole, id);
+	//			category_list->addItem(categ_item);
+	//		}
+	//		card_categories_frame->update();
+	//	}
+}
+
 void MyTasksWidget::showContextMenu(const QPoint& pos) {
 	// Get the item at the position
-	QListWidgetItem* item = task_list->itemAt(pos);
+	QListWidgetItem* item;
+	switch (flag_edit_item)
+	{
+	case 1: // edit task widget
+		item = task_list->itemAt(pos);
+		break;
+
+	case 2: // edit category widget
+		item = category_list->itemAt(pos);
+		break;
+
+	case 3: // edit comment widget
+		item = comment_list->itemAt(pos);
+		break;
+
+	default: item = nullptr;
+		break;
+	}
+
 	if (!item) {
 		return; // No item at this position
 	}
@@ -335,18 +439,69 @@ void MyTasksWidget::showContextMenu(const QPoint& pos) {
 
 	connect(deleteAction, &QAction::triggered, [this, item]()
 		{
-			taskService_.delete_task(item->data(Qt::UserRole).toInt());
-			delete task_list->takeItem(task_list->row(item));
+			switch (flag_edit_item)
+			{
+			case 1:
+				taskService_.delete_task(item->data(Qt::UserRole).toInt());
+				delete task_list->takeItem(task_list->row(item));
+				break;
+
+			case 2:
+				taskService_.delete_category(item->data(Qt::UserRole).toInt());
+				delete category_list->takeItem(category_list->row(item));
+				break;
+
+			case 3:
+				taskService_.delete_comment(item->data(Qt::UserRole).toInt());
+				delete comment_list->takeItem(comment_list->row(item));
+				break;
+
+			default:
+				break;
+			}
 		});
+
 	connect(editAction, &QAction::triggered, [this, item]()
 		{
-			edit_task_window->set_task_item(item);
-			edit_task_window->initialize_components();
-			edit_task_window->show();
+			switch (flag_edit_item)
+			{
+			case 1: 
+				show_edit_task_window(item);
+				break;
+
+			case 2: 
+				show_edit_category_window(item);
+				break;
+
+			case 3:
+				show_edit_comment_window(item);
+				break;
+
+			default:
+				break;
+			}		
 		});
 
 	// Map the local position to global screen coordinates
-	QPoint globalPos = task_list->viewport()->mapToGlobal(pos);
+	QPoint globalPos;
+	switch (flag_edit_item)
+	{
+	case 1: 
+		globalPos = task_list->viewport()->mapToGlobal(pos);
+		contextMenu->popup(task_list->viewport()->mapToGlobal(pos));
+		break;
 
-	contextMenu->popup(task_list->viewport()->mapToGlobal(pos));
+	case 2:
+		globalPos = category_list->viewport()->mapToGlobal(pos);
+		contextMenu->popup(category_list->viewport()->mapToGlobal(pos));
+		break;
+
+	case 3:
+		globalPos = comment_list->viewport()->mapToGlobal(pos);
+		contextMenu->popup(comment_list->viewport()->mapToGlobal(pos));
+		break;
+
+	default:
+		break;
+	}	
 }
