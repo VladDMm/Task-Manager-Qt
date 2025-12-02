@@ -4,7 +4,7 @@
 #include "headers/CentralDatabaseClass.h"
 #include "headers/MyTaskW.h"
 #include "headers/SettingsW.h"
-#include "headers/DashboardW.h"
+//#include "headers/DashboardW.h"
 #include "headers/TopBarW.h"
 
 
@@ -57,11 +57,11 @@ MainWindow::MainWindow(QWidget* parent)
 
     // widgets
     topBarWidget = new TopBarWidget(this);
-    dashboardWidget = new DashboardWidget(this);
+    //dashboardWidget = new DashboardWidget(this);
     tasksWidget = new MyTasksWidget(this);
     settingsWidget = new SettingsWidget(this);
 
-    stackedLayout->addWidget(dashboardWidget);
+    //stackedLayout->addWidget(dashboardWidget);
     stackedLayout->addWidget(tasksWidget);
     stackedLayout->addWidget(settingsWidget);
 
@@ -79,11 +79,11 @@ MainWindow::MainWindow(QWidget* parent)
     mainLayout->addWidget(rightContainer, 1);
 
     // === Connects ===
-    connect(sidePanel, &SidePanel::dashboardClicked, this, &MainWindow::showDashboard);
-    connect(sidePanel, &SidePanel::tasksClicked, this, &MainWindow::showTasks);
+    //connect(sidePanel, &SidePanel::dashboardClicked, this, &MainWindow::showDashboard);
     //connect(sidePanel, &SidePanel::tasksClicked, topBarWidget, &TopBarWidget::show_buttons_in_top_bar);
     //connect(sidePanel, &SidePanel::dashboardClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
     //connect(sidePanel, &SidePanel::settingsClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
+    connect(sidePanel, &SidePanel::tasksClicked, this, &MainWindow::showTasks);
     connect(sidePanel, &SidePanel::settingsClicked, this, &MainWindow::showSettings);
     connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_task_list);
     connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_category_list);
@@ -91,9 +91,9 @@ MainWindow::MainWindow(QWidget* parent)
 }
 
 
-void MainWindow::showDashboard() {
-    stackedLayout->setCurrentWidget(dashboardWidget);
-}
+//void MainWindow::showDashboard() {
+//    stackedLayout->setCurrentWidget(dashboardWidget);
+//}
 
 void MainWindow::showTasks() {
     stackedLayout->setCurrentWidget(tasksWidget);
@@ -101,6 +101,11 @@ void MainWindow::showTasks() {
 
 void MainWindow::showSettings() {
     stackedLayout->setCurrentWidget(settingsWidget);
+}
+void MainWindow::initializing_components() {
+    tasksWidget->refresh_comment_list();
+    tasksWidget->refresh_category_list();
+    tasksWidget->refresh_task_list();
 }
 
 //void MainWindow::refreshTasks() {

@@ -46,6 +46,9 @@ MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
             QPushButton:hover {
                 background-color: #3c7cd4;
             }
+			QMessageBox {
+				background-color: #ffffff;
+			}
         )");
 
 	QGridLayout* grid = new QGridLayout(this);
@@ -94,6 +97,7 @@ MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 	hbox_comments_top->addWidget(new_comment_btn);
 
 	comment_list = new QListWidget;
+	comment_list->setContextMenuPolicy(Qt::CustomContextMenu);
 	vbox_comments->addLayout(hbox_comments_top);
 	vbox_comments->addWidget(comment_list);
 
@@ -135,12 +139,37 @@ MyTasksWidget::MyTasksWidget(QWidget* parent) : QWidget(parent)
 	comment_window =		new AddCommentWindow;
 	edit_comment_window =	new EditCommentWindow;
 
-	connect(task_list, &QListView::customContextMenuRequested, this, [this](const QPoint& p) { flag_edit_item = 1; this->showContextMenu(p); });
-	connect(task_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) { this->show_edit_task_window(item); });
-	connect(category_list, &QListView::customContextMenuRequested, this, [this](const QPoint& p) { flag_edit_item = 2; this->showContextMenu(p); });
-	connect(category_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) {this->show_edit_category_window(item); });
-	connect(comment_list, &QListView::customContextMenuRequested, this, [this](const QPoint& p) { flag_edit_item = 3; this->showContextMenu(p); });
-	connect(comment_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) {this->show_edit_comment_window(item); });
+	connect(task_list, &QListView::customContextMenuRequested, this, [this](const QPoint& p) 
+		{ 
+			flag_edit_item = 1; this->showContextMenu(p); 
+		});
+	connect(task_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) 
+		{ 
+			this->show_edit_task_window(item);
+		});
+	connect(category_list, &QListView::customContextMenuRequested, this, [this](const QPoint& p) 
+		{ 
+			if (edit_task_window->isEnabled())
+				edit_task_window->close();
+			flag_edit_item = 2; this->showContextMenu(p); 
+		});
+	connect(category_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) 
+		{
+			if (edit_task_window->isEnabled())
+				edit_task_window->close();
+			this->show_edit_category_window(item);
+		});
+	connect(comment_list, &QListView::customContextMenuRequested, this, [this](const QPoint& p) 
+		{ 
+			flag_edit_item = 3; this->showContextMenu(p); 
+		});
+	connect(comment_list, &QListWidget::itemDoubleClicked, this, [this](QListWidgetItem* item) 
+		{
+			if (edit_task_window->isEnabled())
+				edit_task_window->close();
+			this->show_edit_comment_window(item);
+		});
+
 	connect(new_task_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_task_window);
 	connect(new_task_btn, &QPushButton::clicked, task_window, &AddTaskWindow::initialize_components);
 	connect(new_categorie_btn, &QPushButton::clicked, this, &MyTasksWidget::show_add_category_window);
@@ -452,8 +481,17 @@ void MyTasksWidget::showContextMenu(const QPoint& pos) {
 				break;
 
 			case 3:
-				taskService_.delete_comment(item->data(Qt::UserRole).toInt());
-				delete comment_list->takeItem(comment_list->row(item));
+				try
+				{
+					taskService_.delete_comment(item->data(Qt::UserRole).toInt());
+					delete comment_list->takeItem(comment_list->row(item));
+				}
+				catch (const std::exception& e)
+				{
+					QMessageBox::warning(this, "Error", e.what());
+					return;
+				}
+				
 				break;
 
 			default:

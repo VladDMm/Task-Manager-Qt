@@ -70,5 +70,6 @@ void ApplicationController::showMainWindow()
     authWindow->close();
     regWindow->close();
     taskService_.initializing_data();
+    mainWindow->initializing_components();
     mainWindow->show();   
 }

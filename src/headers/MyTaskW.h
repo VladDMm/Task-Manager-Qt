@@ -39,9 +39,9 @@ private:
     QPushButton*        new_comment_btn;
     QPushButton*        new_task_btn;
     //
-    QListWidget*        task_list;
-    QListWidget*        category_list;
-    QListWidget*        comment_list;
+    QListWidget*        task_list;      // -> card_tasks_frame
+    QListWidget*        category_list;  // -> card_categories_frame
+    QListWidget*        comment_list;   // -> card_comments_frame
 
 signals:
     void new_task_btn_clicked();

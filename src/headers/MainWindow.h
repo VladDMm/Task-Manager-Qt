@@ -7,7 +7,7 @@ class SidePanel;
 class QStackedLayout;
 class QWidget;
 class TopBarWidget;
-class DashboardWidget;
+//class DashboardWidget;
 class MyTasksWidget;
 class SettingsWidget;
 
@@ -20,7 +20,7 @@ private:
     QWidget*         mainContentWrapper;
     QStackedLayout*  stackedLayout;
     TopBarWidget*    topBarWidget;
-    DashboardWidget* dashboardWidget;
+    //DashboardWidget* dashboardWidget;
     MyTasksWidget*   tasksWidget;
     SettingsWidget*  settingsWidget;
 
@@ -28,10 +28,11 @@ public:
     MainWindow(QWidget* parent = nullptr);
 
 private slots:
-    void showDashboard();
+    //void showDashboard();
+
     void showTasks();
     void showSettings();
 public:
    // void refreshTasks();
-    
+    void initializing_components();
 };

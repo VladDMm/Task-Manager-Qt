@@ -393,7 +393,7 @@ void MySQLService::delete_comment(uint16_t& comment_id)
 	}
 	{
 		PSTMT pstmt = PSTMT(this->con->prepareStatement(
-			"ALTER TABLE comments SET AUTO_INCREMENT = 1"
+			"ALTER TABLE comments AUTO_INCREMENT = 1"
 		));
 
 		pstmt->executeUpdate();

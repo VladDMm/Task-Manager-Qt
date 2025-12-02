@@ -9,7 +9,7 @@ class SidePanel : public QWidget
     Q_OBJECT
 
 private:
-    QPushButton* dashboard;
+    //QPushButton* dashboard;
     QPushButton* myTasks;
     QPushButton* settings;
     QPushButton* logOut;
@@ -18,7 +18,7 @@ public:
     SidePanel(QWidget* parent = nullptr);
 
 signals:
-    void dashboardClicked();
+    //void dashboardClicked();
     void tasksClicked();
     void settingsClicked();
 
