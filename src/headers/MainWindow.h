@@ -1,38 +1,38 @@
 #pragma once
 
 #include <QMainWindow>
-#include "Auth_Window.h"
+#include "AuthWindow.h"
 
 class SidePanel;
 class QStackedLayout;
 class QWidget;
-class Top_Bar_Widget;
-class Dashboard_Widget;
-class My_Tasks_Widget;
-class Settings_Widget;
+class TopBarWidget;
+//class DashboardWidget;
+class MyTasksWidget;
+class SettingsWidget;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 private:
-    SidePanel* sidePanel;
-    QWidget* mainContentWrapper;
-    QStackedLayout* stackedLayout;
-    Top_Bar_Widget* topBarWidget;
-    Dashboard_Widget* dashboardWidget;
-    My_Tasks_Widget* tasksWidget;
-    Settings_Widget* settingsWidget;
+    SidePanel*       sidePanel;
+    QWidget*         mainContentWrapper;
+    QStackedLayout*  stackedLayout;
+    TopBarWidget*    topBarWidget;
+    //DashboardWidget* dashboardWidget;
+    MyTasksWidget*   tasksWidget;
+    SettingsWidget*  settingsWidget;
 
 public:
     MainWindow(QWidget* parent = nullptr);
 
-    ~MainWindow()
-    {
-        
-    }
 private slots:
-    void showDashboard();
+    //void showDashboard();
+
     void showTasks();
     void showSettings();
+public:
+   // void refreshTasks();
+    void initializing_components();
 };

@@ -1,10 +1,10 @@
-#include "headers/Auth_Window.h"
+#include "headers/AuthWindow.h"
 
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLineEdit>
 
-Auth_Window::Auth_Window(QWidget* parent) : QWidget(parent)
+AuthWindow::AuthWindow(QWidget* parent) : QWidget(parent)
 {
     setStyleSheet(R"(
         QWidget {
@@ -56,18 +56,18 @@ Auth_Window::Auth_Window(QWidget* parent) : QWidget(parent)
     layout->addWidget(register_btn);
 
 
-    connect(login_btn, &QPushButton::clicked, this, &Auth_Window::login_button_clicked);
-    connect(register_btn, &QPushButton::clicked, this, &Auth_Window::register_button_ath_win_clicked);
-    connect(usern_line_edit, &QLineEdit::textEdited, this, &Auth_Window::on_lineEdit_username_Edited);
-    connect(passw_line_edit, &QLineEdit::textEdited, this, &Auth_Window::on_lineEdit_password_Edited);
+    connect(login_btn, &QPushButton::clicked, this, &AuthWindow::login_button_clicked);
+    connect(register_btn, &QPushButton::clicked, this, &AuthWindow::register_button_ath_win_clicked);
+    connect(usern_line_edit, &QLineEdit::textEdited, this, &AuthWindow::on_lineEdit_username_Edited);
+    connect(passw_line_edit, &QLineEdit::textEdited, this, &AuthWindow::on_lineEdit_password_Edited);
 }
 
-void Auth_Window::on_lineEdit_username_Edited()
+void AuthWindow::on_lineEdit_username_Edited()
 {
-    m_username = usern_line_edit->text();
+    m_username = usern_line_edit->text().trimmed();
 }
 
-void Auth_Window::on_lineEdit_password_Edited()
+void AuthWindow::on_lineEdit_password_Edited()
 {
-    m_userpass = passw_line_edit->text();
+    m_userpass = passw_line_edit->text().trimmed();
 }

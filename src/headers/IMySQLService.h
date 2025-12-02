@@ -1,31 +1,43 @@
 #pragma once
 
-#include "UserService.h"
 #include "TaskManagerService.h"
+#include "Task.h"
 #include "mysql/jdbc.h"
 #include "User.h"
+
+#include <unordered_map>
+
+struct Category;
+struct Comment;
 
 class IDatabaseService
 {
 public:
 	// Users Methods
 	virtual User get_user(std::string_view user, std::string_view pass) = 0;
-	virtual void add_user(UserService &)								= 0;
-	virtual void change_password(std::string_view pw)					= 0;
-	virtual void change_username(std::string_view usern)				= 0;
+	virtual void add_user(User &)										= 0;
+	virtual void change_password(std::string_view password)				= 0;
+	virtual void change_username(std::string_view username)				= 0;
 
 	// Tasks Methods
-	virtual void add_task(std::unordered_map<int, Task> &)				= 0;
-	virtual void add_category(TaskService &)							= 0;
-	virtual void add_task_to_category(TaskService &)					= 0;
-	virtual void change_category_for_task(TaskService &)				= 0;
-	virtual void change_task(TaskService &)								= 0;
-	virtual void delete_task(TaskService &)								= 0;
-	virtual void delete_category(TaskService &)							= 0;
+	virtual uint16_t add_task(const Task&)								= 0;
+	virtual uint16_t add_category(std::string_view category_title)		= 0;
+	virtual void add_task_to_category(uint16_t&, uint16_t&)				= 0;
+	virtual uint16_t add_comment(std::string_view text)					= 0;
+	virtual void update_category_for_task(uint16_t&, uint16_t&)			= 0;
+	virtual void update_category(Category& category)					= 0;
+	virtual void update_task(Task&)										= 0;
+	virtual void update_comment(Comment& comment)						= 0;
+	virtual std::unordered_map<uint16_t, Category> get_categories()		= 0;
+	virtual std::unordered_map<uint16_t, Comment> get_comments()		= 0;
+	virtual std::unordered_map<uint16_t, Task> get_tasks()				= 0;
+	virtual void delete_task(uint16_t &)								= 0;
+	virtual void delete_category(uint16_t &)							= 0;
+	virtual void delete_comment(uint16_t &)								= 0;
+	virtual void delete_task_from_category(uint16_t task_id, uint16_t category_id) = 0;
 
 	virtual ~IDatabaseService()											= default;
 };
-
 
 class MySQLService : public IDatabaseService
 {
@@ -37,20 +49,27 @@ public:
 
 	User get_user(std::string_view user, std::string_view pass)	override;
 
-	void add_user(UserService &)								override;
+	void add_user(User &)										override;
 	void change_username(std::string_view usern)				override;
 	void change_password(std::string_view pw)					override;
 														
-	void add_task(std::unordered_map<int, Task> &tasks)			override;
-	void add_category(TaskService &)							override;
-	void add_task_to_category(TaskService &)					override;
-	void change_category_for_task(TaskService &)				override;
-	void change_task(TaskService &)								override;
-														
-	void delete_task(TaskService &)								override;
-	void delete_category(TaskService &)							override;
+	uint16_t add_task(const Task& task)							override;
+	uint16_t add_category(std::string_view category_title)		override;
+	void add_task_to_category(uint16_t&, uint16_t&)				override;
+	uint16_t add_comment(std::string_view text)					override;
+	void update_category_for_task(uint16_t&, uint16_t&)			override;
+	void update_category(Category& category)					override;
+	void update_task(Task&)										override;
+	void update_comment(Comment& comment)						override;
+	std::unordered_map<uint16_t, Category> get_categories()		override;
+	std::unordered_map<uint16_t, Comment> get_comments()		override;
+	std::unordered_map<uint16_t, Task> get_tasks()				override;
+	void delete_task(uint16_t&)									override;
+	void delete_category(uint16_t&)								override;
+	void delete_comment(uint16_t&)								override;
+	void delete_task_from_category(uint16_t task_id, uint16_t category_id)	override;
 
-	~MySQLService() = default;
+	~MySQLService()											   = default;
 };	
 
 extern MySQLService msql_srv;

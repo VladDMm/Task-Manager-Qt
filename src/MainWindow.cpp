@@ -2,10 +2,10 @@
 #include "headers/SidePanel.h"
 #include "headers/MySQLConnector.h"
 #include "headers/CentralDatabaseClass.h"
-#include "headers/My_Task_W.h"
-#include "headers/Settings_W.h"
-#include "headers/Dashboard_W.h"
-#include "headers/Top_Bar_W.h"
+#include "headers/MyTaskW.h"
+#include "headers/SettingsW.h"
+//#include "headers/DashboardW.h"
+#include "headers/TopBarW.h"
 
 
 #include <QHBoxLayout>
@@ -24,10 +24,11 @@
 
 
 MySQLConnector my_sql;
-MySQLService msql_srv(my_sql.get_connection());
-Database db(msql_srv);
+MySQLService msql_srv_(my_sql.get_connection());
+Database db(msql_srv_);
 
-auto& task_srv = TaskService::get_instance();
+TaskService taskService_;
+
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
@@ -55,12 +56,12 @@ MainWindow::MainWindow(QWidget* parent)
     stackedLayout = new QStackedLayout(mainContentWrapper);
 
     // widgets
-    topBarWidget = new Top_Bar_Widget(this);
-    dashboardWidget = new Dashboard_Widget(this);
-    tasksWidget = new My_Tasks_Widget(this);
-    settingsWidget = new Settings_Widget(this);
+    topBarWidget = new TopBarWidget(this);
+    //dashboardWidget = new DashboardWidget(this);
+    tasksWidget = new MyTasksWidget(this);
+    settingsWidget = new SettingsWidget(this);
 
-    stackedLayout->addWidget(dashboardWidget);
+    //stackedLayout->addWidget(dashboardWidget);
     stackedLayout->addWidget(tasksWidget);
     stackedLayout->addWidget(settingsWidget);
 
@@ -74,24 +75,25 @@ MainWindow::MainWindow(QWidget* parent)
     rightLayout->addWidget(topBarWidget);
     rightLayout->addWidget(mainContentWrapper, 1);
 
-
     mainLayout->addWidget(sidePanel);
     mainLayout->addWidget(rightContainer, 1);
 
     // === Connects ===
-    connect(sidePanel, &SidePanel::dashboardClicked, this, &MainWindow::showDashboard);
+    //connect(sidePanel, &SidePanel::dashboardClicked, this, &MainWindow::showDashboard);
+    //connect(sidePanel, &SidePanel::tasksClicked, topBarWidget, &TopBarWidget::show_buttons_in_top_bar);
+    //connect(sidePanel, &SidePanel::dashboardClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
+    //connect(sidePanel, &SidePanel::settingsClicked, topBarWidget, &TopBarWidget::clear_top_bar_buttons);
     connect(sidePanel, &SidePanel::tasksClicked, this, &MainWindow::showTasks);
-    connect(sidePanel, &SidePanel::tasksClicked, topBarWidget, &Top_Bar_Widget::show_buttons_in_top_bar);
-    connect(sidePanel, &SidePanel::dashboardClicked, topBarWidget, &Top_Bar_Widget::clear_top_bar_buttons);
-    connect(sidePanel, &SidePanel::settingsClicked, topBarWidget, &Top_Bar_Widget::clear_top_bar_buttons);
     connect(sidePanel, &SidePanel::settingsClicked, this, &MainWindow::showSettings);
-    
+    connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_task_list);
+    connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_category_list);
+    connect(sidePanel, &SidePanel::tasksClicked, tasksWidget, &MyTasksWidget::refresh_comment_list);
 }
 
 
-void MainWindow::showDashboard() {
-    stackedLayout->setCurrentWidget(dashboardWidget);
-}
+//void MainWindow::showDashboard() {
+//    stackedLayout->setCurrentWidget(dashboardWidget);
+//}
 
 void MainWindow::showTasks() {
     stackedLayout->setCurrentWidget(tasksWidget);
@@ -100,6 +102,15 @@ void MainWindow::showTasks() {
 void MainWindow::showSettings() {
     stackedLayout->setCurrentWidget(settingsWidget);
 }
+void MainWindow::initializing_components() {
+    tasksWidget->refresh_comment_list();
+    tasksWidget->refresh_category_list();
+    tasksWidget->refresh_task_list();
+}
+
+//void MainWindow::refreshTasks() {
+//    tasksWidget->refresh_task_list();
+//}
 
 //
 //QWidget* MainWindow::createDashboardWidget()

@@ -1,12 +1,12 @@
-#include "headers/Reg_Window.h"
-#include "headers/UserService.h"
+#include "headers/RegWindow.h"
+#include "headers/User.h"
 
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <QMessageBox>
 
-Reg_Window::Reg_Window(QWidget* parent) : QWidget(parent)
+RegWindow::RegWindow(QWidget* parent) : QWidget(parent)
 {
     setStyleSheet(R"(
         QWidget {
@@ -56,23 +56,23 @@ Reg_Window::Reg_Window(QWidget* parent) : QWidget(parent)
     layout->addWidget(register_btn);
     layout->addWidget(back_auth);
 
-    connect(register_btn, &QPushButton::clicked, this, &Reg_Window::on_registerPushButton_reg_win_clicked);
-    connect(back_auth, &QPushButton::clicked, this, &Reg_Window::back_auth_button_reg_win_clicked);
-    connect(usern_line_edit, &QLineEdit::textEdited, this, &Reg_Window::on_lineEdit_username_Edited);
-    connect(passw_line_edit, &QLineEdit::textEdited, this, &Reg_Window::on_lineEdit_password_Edited);
+    connect(register_btn, &QPushButton::clicked, this, &RegWindow::on_registerPushButton_reg_win_clicked);
+    connect(back_auth, &QPushButton::clicked, this, &RegWindow::back_auth_button_reg_win_clicked);
+    connect(usern_line_edit, &QLineEdit::textEdited, this, &RegWindow::on_lineEdit_username_Edited);
+    connect(passw_line_edit, &QLineEdit::textEdited, this, &RegWindow::on_lineEdit_password_Edited);
 }
 
-void Reg_Window::on_lineEdit_username_Edited()
+void RegWindow::on_lineEdit_username_Edited()
 {
     m_username = usern_line_edit->text();
 }
 
-void Reg_Window::on_lineEdit_password_Edited()
+void RegWindow::on_lineEdit_password_Edited()
 {
     m_userpass = usern_line_edit->text();
 }
 
-void Reg_Window::on_registerPushButton_reg_win_clicked()
+void RegWindow::on_registerPushButton_reg_win_clicked()
 {
     m_username = usern_line_edit->text();
     m_userpass = usern_line_edit->text();
@@ -85,8 +85,9 @@ void Reg_Window::on_registerPushButton_reg_win_clicked()
 
     try
     {
-        user_srv = current_user = User(m_username.toStdString(), m_userpass.toStdString());
-        user_srv.add_user();
+        current_user = User(m_username.toStdString(), m_userpass.toStdString());
+        current_user.add_user();
+        QMessageBox::information(this, "Success", "Successfully.");
     }
     catch (const std::runtime_error& e)
     {

@@ -1,4 +1,4 @@
-﻿#include "headers/Top_Bar_W.h"
+﻿#include "headers/TopBarW.h"
 #include "headers/SidePanel.h"
 
 #include <QFrame>
@@ -15,7 +15,7 @@
 #include <QPixmap>
 #include <QApplication>
 
-Top_Bar_Widget::Top_Bar_Widget(QWidget* parent)
+TopBarWidget::TopBarWidget(QWidget* parent)
     : QWidget(parent)
 {
     card = new QFrame(this);
@@ -35,18 +35,11 @@ Top_Bar_Widget::Top_Bar_Widget(QWidget* parent)
             background: transparent;
         }
     )");
-
+    card->setFixedHeight(50);
 
     cardLayout = new QHBoxLayout(card);
     cardLayout->setContentsMargins(20, 10, 20, 10);
     cardLayout->setSpacing(15);
-    
-    /*notifButton = new QToolButton;
-    notifButton->setIcon(QIcon(":/rsc/notification.png"));
-    notifButton->setText("🔔");
-    notifButton->setIconSize(QSize(24, 24));
-    notifButton->setToolTip("Notifications");
-    notifButton->setCursor(Qt::PointingHandCursor);*/
  
     profileButton = new QToolButton;
     profileButton->setIcon(QIcon(":/rsc/user.png"));
@@ -95,8 +88,6 @@ Top_Bar_Widget::Top_Bar_Widget(QWidget* parent)
     profileButton->setMenu(profileMenu);
 
     cardLayout->addStretch();
-    cardLayout->addSpacing(10);
-    //cardLayout->addWidget(notifButton);
     cardLayout->addWidget(profileButton);
 
     mainLayout = new QVBoxLayout(this);
@@ -113,39 +104,39 @@ Top_Bar_Widget::Top_Bar_Widget(QWidget* parent)
     connect(actLogout, &QAction::triggered, qApp, QApplication::quit);
 }
 
-void Top_Bar_Widget::show_buttons_in_top_bar()
-{
-    if (newTask)
-        return;
+//void TopBarWidget::show_buttons_in_top_bar()
+//{
+//    if (newTask)
+//        return;
+//
+//    newTask = new QPushButton("+ New Task");
+//    newTask->setCursor(Qt::PointingHandCursor);
+//    newTask->setStyleSheet(R"(
+//    QPushButton {
+//        background-color: #4a90e2;
+//        color: white;
+//        border-radius: 10px;
+//        padding: 6px 14px;
+//        font-weight: bold;
+//    }
+//    QPushButton:hover {
+//        background-color: #3c7cd4;
+//    }
+//)");
+//
+//    int index = cardLayout->indexOf(profileButton);
+//    cardLayout->insertWidget(index, newTask);
+//
+//    cardLayout->update();
+//    update();
+//
+//}
 
-    newTask = new QPushButton("+ New Task");
-    newTask->setCursor(Qt::PointingHandCursor);
-    newTask->setStyleSheet(R"(
-    QPushButton {
-        background-color: #4a90e2;
-        color: white;
-        border-radius: 10px;
-        padding: 6px 14px;
-        font-weight: bold;
-    }
-    QPushButton:hover {
-        background-color: #3c7cd4;
-    }
-)");
-
-    int index = cardLayout->indexOf(profileButton);
-    cardLayout->insertWidget(index, newTask);
-
-    cardLayout->update();
-    update();
-
-}
-
-void Top_Bar_Widget::clear_top_bar_buttons()
-{
-    if (newTask) {
-        cardLayout->removeWidget(newTask);
-        delete newTask;
-        newTask = nullptr;
-    }
-}
+//void TopBarWidget::clear_top_bar_buttons()
+//{
+//    if (newTask) {
+//        cardLayout->removeWidget(newTask);
+//        delete newTask;
+//        newTask = nullptr;
+//    }
+//}

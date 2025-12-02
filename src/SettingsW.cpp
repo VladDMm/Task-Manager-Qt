@@ -1,10 +1,10 @@
-#include "headers/Settings_W.h"
+#include "headers/SettingsW.h"
 
 #include <QFrame>
 #include <QLabel>
 #include <QVBoxLayout>
 
-Settings_Widget::Settings_Widget(QWidget* parent) : QWidget(parent)
+SettingsWidget::SettingsWidget(QWidget* parent) : QWidget(parent)
 {
     card = new QFrame(this);
     card->setStyleSheet(R"(

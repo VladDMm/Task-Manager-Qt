@@ -42,9 +42,6 @@
     <ClCompile Include="src\User.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\UserService.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,25 +51,46 @@
     <ClCompile Include="src\SidePanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Auth_Window.cpp">
+    <ClCompile Include="src\AuthWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Reg_Window.cpp">
+    <ClCompile Include="src\RegWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ApplicationController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Settings_W.cpp">
+    <ClCompile Include="src\SettingsW.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\My_Task_W.cpp">
+    <ClCompile Include="src\MyTaskW.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Dashboard_W.cpp">
+    <ClCompile Include="src\DashboardW.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Top_Bar_W.cpp">
+    <ClCompile Include="src\TopBarW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AddTaskW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Task.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AddCategoryW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditTaskW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditCategoryW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AddCommentW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditComment.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,7 +110,13 @@
     <ClInclude Include="src\headers\User.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\UserService.h">
+    <ClInclude Include="src\headers\EnumTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\Task.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\IdCacheService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -111,25 +135,43 @@
     <QtMoc Include="src\headers\SidePanel.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\headers\Auth_Window.h">
+    <QtMoc Include="src\headers\AuthWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\headers\Reg_Window.h">
+    <QtMoc Include="src\headers\RegWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="src\headers\ApplicationController.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\headers\My_Task_W.h">
+    <QtMoc Include="src\headers\MyTaskW.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\headers\Settings_W.h">
+    <QtMoc Include="src\headers\SettingsW.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\headers\Dashboard_W.h">
+    <QtMoc Include="src\headers\DashboardW.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="src\headers\Top_Bar_W.h">
+    <QtMoc Include="src\headers\TopBarW.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\headers\AddTaskW.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\headers\AddCategoryW.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\headers\EditTaskW.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\headers\EditCategoryW.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\headers\AddCommentW.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="src\headers\EditCommentW.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

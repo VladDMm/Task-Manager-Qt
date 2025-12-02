@@ -1,0 +1,67 @@
+#pragma once
+
+#include <QWidget>
+
+class QFrame;
+class QVBoxLayout;
+class QPushButton;
+class QListWidget;
+class AddTaskWindow;
+class AddCategoryWindow;
+class EditTaskWindow;
+class EditCategoryWindow;
+class QPoint;
+class QListWidgetItem;
+class AddCommentWindow;
+class EditCommentWindow;
+
+class MyTasksWidget : public QWidget
+{
+    Q_OBJECT
+
+private:
+    AddTaskWindow*      task_window;
+    AddCategoryWindow*  category_window;
+    AddCommentWindow*   comment_window;
+    EditTaskWindow*     edit_task_window;
+    EditCategoryWindow* edit_category_window;
+    EditCommentWindow*  edit_comment_window;
+
+    QFrame*             card_tasks_frame;
+    QFrame*             card_categories_frame;
+    QFrame*             card_comments_frame;
+    // layout for objects in frame
+    QVBoxLayout*        vbox_categories;
+    QVBoxLayout*        vbox_comments;
+    QVBoxLayout*        vbox_tasks;
+    // 
+    QPushButton*        new_categorie_btn;
+    QPushButton*        new_comment_btn;
+    QPushButton*        new_task_btn;
+    //
+    QListWidget*        task_list;      // -> card_tasks_frame
+    QListWidget*        category_list;  // -> card_categories_frame
+    QListWidget*        comment_list;   // -> card_comments_frame
+
+signals:
+    void new_task_btn_clicked();
+    void new_categorie_btn_clicked();
+    void new_comment_btn_clicked();
+
+public slots:
+    void show_add_task_window();
+    void show_add_category_window();
+    void show_add_comment_window();
+    void show_edit_task_window(QListWidgetItem* item);
+    void show_edit_category_window(QListWidgetItem* item);
+    void show_edit_comment_window(QListWidgetItem* item);
+    void refresh_task_list(); 
+    void refresh_category_list();
+    void refresh_comment_list();
+
+private slots:
+    void showContextMenu(const QPoint& pos);
+
+public:
+    MyTasksWidget(QWidget* parent = nullptr);
+};

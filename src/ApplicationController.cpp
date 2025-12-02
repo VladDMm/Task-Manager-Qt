@@ -4,21 +4,20 @@
 #include "headers/CentralDatabaseClass.h"
 
 User current_user;
-UserService user_srv;
 
 ApplicationController::ApplicationController()
 {
     mainWindow = new MainWindow;
-    authWindow = new Auth_Window;
-    regWindow = new Reg_Window;
+    authWindow = new AuthWindow;
+    regWindow = new RegWindow;
     
-    connect(authWindow, &Auth_Window::register_button_ath_win_clicked,
+    connect(authWindow, &AuthWindow::register_button_ath_win_clicked,
         this, &ApplicationController::showRegWindow);
 
-    connect(authWindow, &Auth_Window::login_button_clicked,
+    connect(authWindow, &AuthWindow::login_button_clicked,
         this, &ApplicationController::authentificate);
 
-    connect(regWindow, &Reg_Window::back_auth_button_reg_win_clicked, this, &ApplicationController::showAuthWindow);
+    connect(regWindow, &RegWindow::back_auth_button_reg_win_clicked, this, &ApplicationController::showAuthWindow);
     
     // show initial authentification window
     authWindow->show();
@@ -57,9 +56,7 @@ void ApplicationController::authentificate()
         }
 
         current_user = db.get_user(username.toStdString(), password.toStdString());
-        
-        if(current_user)
-            showMainWindow();
+        showMainWindow();
     }
     catch (const std::exception& e)
     {
@@ -72,5 +69,7 @@ void ApplicationController::showMainWindow()
 {
     authWindow->close();
     regWindow->close();
+    taskService_.initializing_data();
+    mainWindow->initializing_components();
     mainWindow->show();   
 }
