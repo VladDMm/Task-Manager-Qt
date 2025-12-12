@@ -1,7 +1,6 @@
 #pragma once
 
 #include "TaskManagerService.h"
-#include "Task.h"
 #include "mysql/jdbc.h"
 #include "User.h"
 
@@ -9,6 +8,7 @@
 
 struct Category;
 struct Comment;
+class Task;
 
 class IDatabaseService
 {
@@ -38,6 +38,7 @@ public:
 
 	virtual ~IDatabaseService()											= default;
 };
+
 
 class MySQLService : public IDatabaseService
 {
@@ -73,3 +74,4 @@ public:
 };	
 
 extern MySQLService msql_srv;
+extern IDatabaseService* db_service;

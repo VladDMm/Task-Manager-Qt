@@ -1,6 +1,4 @@
 #include "headers/TaskManagerService.h"
-#include "headers/CentralDatabaseClass.h"
-
 #include <algorithm>
 #include <string>
 
@@ -31,7 +29,7 @@ uint16_t TaskService::add_task(Task task)
 {
 	try
 	{
-		task.set_id(db.add_task(task));
+		task.set_id(db_service->add_task(task));
 		tasks[task.get_id()] = task;
 		return task.get_id();
 	}
@@ -45,7 +43,7 @@ uint16_t TaskService::add_category(std::string_view category_title)
 {
 	try
 	{
-		uint16_t categ_id = db.add_category(category_title);
+		uint16_t categ_id = db_service->add_category(category_title);
 		categories[categ_id] = Category{ categ_id, category_title.data() };
 		return categ_id;
 	}
@@ -60,7 +58,7 @@ void TaskService::add_comment(std::string_view text)
 {
 	try
 	{
-		auto comment_id = db.add_comment(text);
+		auto comment_id = db_service->add_comment(text);
 		comments[comment_id] = Comment{ comment_id, text.data() };
 	}
 	catch (const sql::SQLException& e)
@@ -73,7 +71,7 @@ void TaskService::add_task_to_category(uint16_t task_id, Category category)
 {
 	try
 	{
-		db.add_task_to_category(task_id, category.id);
+		db_service->add_task_to_category(task_id, category.id);
 		// add local
 		auto it = tasks.find(task_id);
 		if (it != tasks.end())
@@ -91,7 +89,7 @@ void TaskService::update_category_for_task(uint16_t task_id, Category category)
 {
 	try
 	{
-		db.update_category_for_task(task_id, category.id);
+		db_service->update_category_for_task(task_id, category.id);
 		auto it = tasks.find(task_id);
 		it->second.task_category = std::move(category);
 	}
@@ -105,7 +103,7 @@ void TaskService::update_task(Task& task)
 {
 	try
 	{
-		db.update_task(task);
+		db_service->update_task(task);
 		tasks[task.get_id()] = std::move(task);
 	}
 	catch (const sql::SQLException& e)
@@ -118,7 +116,7 @@ void TaskService::update_category(Category& category)
 {
 	try
 	{
-		db.update_category(category);
+		db_service->update_category(category);
 		categories[category.id] = std::move(category);
 	}
 	catch (const sql::SQLException& e)
@@ -132,7 +130,7 @@ void TaskService::update_comment(Comment& comment)
 {
 	try
 	{
-		db.update_comment(comment);
+		db_service->update_comment(comment);
 		comments[comment.id] = std::move(comment);
 
 	}
@@ -147,7 +145,7 @@ std::unordered_map<uint16_t, Category> TaskService::get_categories()
 	try
 	{
 		if (categories.empty())
-			return db.get_categories();
+			return db_service->get_categories();
 
 		return categories;
 	}
@@ -180,7 +178,7 @@ std::unordered_map<uint16_t, Comment> TaskService::get_comments()
 	try
 	{
 		if (comments.empty())
-			return db.get_comments();
+			return db_service->get_comments();
 
 		return comments;
 	}
@@ -195,7 +193,7 @@ std::unordered_map<uint16_t, Task> TaskService::get_tasks()
 	try
 	{
 		if (tasks.empty())
-			return db.get_tasks();
+			return db_service->get_tasks();
 
 		return tasks;
 	}
@@ -228,7 +226,7 @@ void TaskService::delete_task(uint16_t id)
 		auto it = tasks.find(id);
 		if (it != tasks.end())
 		{
-			db.delete_task(id);
+			db_service->delete_task(id);
 			tasks.erase(id);
 		}
 	}
@@ -243,7 +241,7 @@ void TaskService::delete_category(uint16_t category_id)
 {
 	try
 	{
-		db.delete_category(category_id);
+		db_service->delete_category(category_id);
 		categories.erase(category_id);
 
 		for (auto& obj : tasks) {
@@ -263,7 +261,7 @@ void TaskService::delete_comment(uint16_t comment_id)
 {
 	try
 	{
-		db.delete_comment(comment_id);
+		db_service->delete_comment(comment_id);
 		comments.erase(comment_id);
 	}
 	catch (const sql::SQLException& e)
@@ -276,7 +274,7 @@ void TaskService::delete_task_from_category(uint16_t task_id, uint16_t category_
 {
 	try
 	{
-		db.delete_task_from_category(task_id, category_id);
+		db_service->delete_task_from_category(task_id, category_id);
 		auto it = tasks.find(task_id);
 		it->second.task_category = { 0, "" };
 	}

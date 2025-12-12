@@ -1,16 +1,16 @@
 #include "headers/User.h"
-#include "headers/CentralDatabaseClass.h"
+#include "headers/IMySQLService.h"
 
 void User::change_password(std::string_view password)
 {
-	db.change_password(password);
+	db_service->change_password(password);
 }
 
 void User::change_username(std::string_view username)
 {
-	db.change_username(username);
+	db_service->change_username(username);
 }
 void User::add_user()
 {
-	db.add_user(*this);
+	db_service->add_user(*this);
 }
