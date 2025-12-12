@@ -1,12 +1,10 @@
 ﻿#include "headers/MainWindow.h"
 #include "headers/SidePanel.h"
 #include "headers/MySQLConnector.h"
-#include "headers/CentralDatabaseClass.h"
+#include "headers/TaskManagerService.h"
 #include "headers/MyTaskW.h"
 #include "headers/SettingsW.h"
-//#include "headers/DashboardW.h"
 #include "headers/TopBarW.h"
-
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -22,11 +20,11 @@
 #include <QPushButton>
 #include <QCoreApplication>
 
-
-MySQLConnector my_sql;
-MySQLService msql_srv_(my_sql.get_connection());
-Database db(msql_srv_);
-
+// to do (implement generic fnc to auto init IDatabaseService with specific DB)
+MySQLConnector      my_sql;
+MySQLService        msql_srv_(my_sql.get_connection());
+IDatabaseService    *db_service = &msql_srv_;
+//Database db(msql_srv_);
 TaskService taskService_;
 
 

@@ -1,4 +1,5 @@
 #include "headers/IMySQLService.h"
+#include "headers/Task.h"
 #include "sodium.h"
 
 using STMT = std::unique_ptr<sql::Statement>;

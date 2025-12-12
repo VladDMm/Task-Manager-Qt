@@ -1,7 +1,7 @@
 ﻿#include "headers/ApplicationController.h"
 #include "headers/MainWindow.h"
 #include <QMessageBox>
-#include "headers/CentralDatabaseClass.h"
+#include "headers/TaskManagerService.h"
 
 User current_user;
 
@@ -55,7 +55,7 @@ void ApplicationController::authentificate()
             throw std::runtime_error("Empty credentials");
         }
 
-        current_user = db.get_user(username.toStdString(), password.toStdString());
+        current_user = db_service->get_user(username.toStdString(), password.toStdString());
         showMainWindow();
     }
     catch (const std::exception& e)
